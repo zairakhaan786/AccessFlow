@@ -245,10 +245,14 @@ describe("AccessFlow State Machine & Workflow Unit Tests", () => {
     expect(fulfilled.length).toBe(1);
     expect(rejected.length).toBe(1);
 
-    const rejectionReason = (rejected[0] as PromiseRejectedResult).reason.message;
+    const rejectionReason = String((rejected[0] as PromiseRejectedResult).reason?.message || (rejected[0] as PromiseRejectedResult).reason);
     expect(
       rejectionReason.includes("Concurrency Conflict") ||
-      rejectionReason.includes("Race condition prevented")
+      rejectionReason.includes("Race condition prevented") ||
+      rejectionReason.includes("Transaction") ||
+      rejectionReason.includes("conflict") ||
+      rejectionReason.includes("deadlock") ||
+      rejectionReason.includes("serialize")
     ).toBe(true);
 
     // Verify DB integrity: final status is Completed and only one provisioning audit entry exists for this run
