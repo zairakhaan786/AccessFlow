@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AccessFlow - Enterprise Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Outfit:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed-variant": "#3c475a",
+                        "on-background": "#dce2f6",
+                        "on-primary": "#002c72",
+                        "on-surface-variant": "#c2c6d7",
+                        "surface-bright": "#323949",
+                        "on-tertiary": "#263143",
+                        "on-error": "#690005",
+                        "surface-container-high": "#232a39",
+                        "on-secondary-fixed": "#0f0069",
+                        "inverse-surface": "#dce2f6",
+                        "primary-container": "#2f6fed",
+                        "tertiary-fixed": "#d8e3fb",
+                        "primary-fixed": "#dae2ff",
+                        "on-primary-fixed": "#001847",
+                        "on-secondary-fixed-variant": "#3323cc",
+                        "surface-variant": "#2e3544",
+                        "inverse-primary": "#0056d0",
+                        "secondary-fixed": "#e2dfff",
+                        "error-container": "#93000a",
+                        "surface-container-lowest": "#070e1c",
+                        "outline": "#8c90a0",
+                        "surface-container-low": "#151b2a",
+                        "surface-container-highest": "#2e3544",
+                        "surface-container": "#19202e",
+                        "tertiary": "#bcc7de",
+                        "on-secondary": "#1d00a5",
+                        "inverse-on-surface": "#2a3040",
+                        "on-tertiary-fixed": "#111c2d",
+                        "surface": "#0c1321",
+                        "surface-dim": "#0c1321",
+                        "secondary": "#c3c0ff",
+                        "primary-fixed-dim": "#b1c5ff",
+                        "on-tertiary-container": "#fffeff",
+                        "secondary-container": "#3626ce",
+                        "background": "#0c1321",
+                        "on-secondary-container": "#b3b1ff",
+                        "surface-tint": "#b1c5ff",
+                        "on-surface": "#dce2f6",
+                        "error": "#ffb4ab",
+                        "outline-variant": "#424654",
+                        "tertiary-container": "#6b768b",
+                        "on-error-container": "#ffdad6",
+                        "on-primary-container": "#ffffff",
+                        "primary": "#b1c5ff",
+                        "secondary-fixed-dim": "#c3c0ff",
+                        "tertiary-fixed-dim": "#bcc7de",
+                        "on-primary-fixed-variant": "#0040a0"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "48px",
+                        "unit": "4px",
+                        "gutter": "24px",
+                        "2xl": "64px",
+                        "lg": "24px",
+                        "xl": "40px",
+                        "margin-mobile": "16px",
+                        "sm": "8px",
+                        "3xl": "104px",
+                        "md": "16px",
+                        "xs": "4px"
+                    },
+                    "fontFamily": {
+                        "display-lg-mobile": ["Outfit"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Outfit"],
+                        "label-sm": ["Inter"],
+                        "headline-xl": ["Outfit"],
+                        "display-lg": ["Outfit"]
+                    },
+                    "fontSize": {
+                        "display-lg-mobile": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-xl": ["36px", {"lineHeight": "1.25", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .glass-input {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-input:focus {
+            border-color: #2f6fed;
+            background: rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 0 1px #2f6fed, 0 0 20px rgba(47, 111, 237, 0.1);
+            outline: none;
+        }
+        
+        .btn-primary {
+            background-color: #2F6FED;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1a51c4;
+            box-shadow: 0 0 15px rgba(47, 111, 237, 0.4);
+        }
+        
+        .demo-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.2s ease;
+        }
+        
+        .demo-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(47, 111, 237, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        /* Subtle radial gradient behind the card for depth */
+        .glow-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(47, 111, 237, 0.08) 0%, rgba(11, 18, 32, 0) 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-[#0B1220] text-on-surface min-h-screen relative overflow-hidden flex items-center justify-center antialiased selection:bg-primary-container selection:text-white">
+<!-- Ambient Shader Background -->
+<!-- Depth Glow -->
+<div class="absolute inset-0 w-full h-full -z-10"><!-- STITCH_SHADER_START:ANIMATION_9 class="" -->
+<div class="" style="display:block;width:100%;height:100%;min-height:200px;">
+<canvas id="shader-canvas-ANIMATION_9" style="display:block;width:100%;height:100%"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_9');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+varying vec2 v_texCoord;
+uniform float u_time;
+uniform vec2 u_resolution;
+
+float hash(vec2 p) {
+    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+}
+
+float noise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    f = f * f * (3.0 - 2.0 * f);
+    return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x),
+               mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x), f.y);
+}
+
+void main() {
+    vec2 uv = v_texCoord;
+    vec2 p = uv * 2.0 - 1.0;
+    p.x *= u_resolution.x / u_resolution.y;
+
+    float t = u_time * 0.15;
+    
+    // Clean enterprise white base
+    vec3 baseCol = vec3(0.97, 0.98, 0.99); // #F7F9FC
+    vec3 accentCol = vec3(0.18, 0.44, 0.93); // #2F6FED
+    vec3 deepCol = vec3(0.04, 0.12, 0.23); // #0B1F3A
+    
+    // Subtle grid/circuit lines
+    vec2 grid = fract(p * 4.0 + t * 0.1);
+    float lines = smoothstep(0.02, 0.0, abs(grid.x - 0.5)) + smoothstep(0.02, 0.0, abs(grid.y - 0.5));
+    
+    // Moving nodes/data packets
+    float nodes = 0.0;
+    for(int i = 0; i < 8; i++) {
+        float fi = float(i);
+        vec2 nodePos = vec2(sin(t + fi * 1.5) * 1.2, cos(t * 0.8 + fi * 2.1) * 0.7);
+        float dist = length(p - nodePos);
+        nodes += smoothstep(0.05, 0.0, dist) * 0.6;
+        
+        // Connections
+        float lineToCenter = smoothstep(0.01, 0.0, abs(length(p - nodePos * 0.5) - length(nodePos) * 0.5)) * smoothstep(0.1, 0.0, abs(atan(p.y - nodePos.y*0.5, p.x - nodePos.x*0.5) - atan(nodePos.y, nodePos.x)));
+    }
+    
+    // Soft gradient blooms for depth
+    float bloom = smoothstep(1.5, 0.0, length(p - vec2(0.8, -0.5)));
+    
+    vec3 finalCol = baseCol;
+    finalCol = mix(finalCol, accentCol, lines * 0.03); // Subtle grid
+    finalCol = mix(finalCol, accentCol, nodes * 0.15); // Glowing nodes
+    finalCol = mix(finalCol, deepCol, bloom * 0.05); // Corner depth
+    
+    // Subtle drift noise
+    finalCol += (noise(p * 10.0 + t) - 0.5) * 0.01;
+    
+    gl_FragColor = vec4(finalCol, 1.0);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_9 --></div><div class="glow-bg"></div>
+<!-- Login Container -->
+<main class="relative z-10 w-full max-w-[420px] px-margin-mobile md:px-0">
+<div class="glass-panel backdrop-blur-2xl rounded-xl p-lg md:p-xl flex flex-col gap-lg">
+<!-- Brand Header -->
+<header class="flex flex-col items-center text-center gap-sm mb-sm">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mb-xs shadow-lg relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
+<span class="font-headline-md text-headline-md text-primary font-bold tracking-tighter">NA</span>
+</div>
+<h1 class="font-headline-xl text-headline-xl text-on-surface">AccessFlow</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-[280px]">Governed enterprise access &amp; provisioning portal</p>
+</header>
+<!-- Login Form -->
+<form class="flex flex-col gap-md" onsubmit="event.preventDefault();">
+<div class="flex flex-col gap-xs relative">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider ml-1" for="email">Work Email</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">mail</span>
+<input class="glass-input w-full h-[48px] rounded-lg pl-[40px] pr-md font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant/50 focus:ring-0" id="email" placeholder="name@company.com" type="email"/>
+</div>
+</div>
+<div class="flex flex-col gap-xs relative">
+<div class="flex justify-between items-center ml-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider" for="password">Password</label>
+<a class="font-label-sm text-label-sm text-primary hover:text-primary-fixed transition-colors" href="#">Forgot?</a>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">lock</span>
+<input class="glass-input w-full h-[48px] rounded-lg pl-[40px] pr-[40px] font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant/50 focus:ring-0" id="password" placeholder="••••••••" type="password"/>
+<button class="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface transition-colors focus:outline-none" type="button">
+<span class="material-symbols-outlined text-[20px]">visibility_off</span>
+</button>
+</div>
+</div>
+<button class="btn-primary w-full h-[48px] rounded-lg font-body-md text-body-md font-semibold text-white mt-xs flex items-center justify-center gap-sm" type="submit">
+                    Log in
+                    <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+<div class="text-center mt-xs">
+<span class="font-body-md text-body-md text-on-surface-variant">Don't have an account?</span>
+<a class="font-body-md text-body-md text-primary font-semibold hover:text-primary-fixed transition-colors ml-1" href="#">Sign up</a>
+</div>
+</form>
+<hr class="border-t border-white/5 my-xs"/>
+<!-- Demo Switchers -->
+<div class="flex flex-col gap-sm">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider text-center mb-xs">Quick Access Demo</span>
+<button class="demo-card w-full rounded-lg p-sm flex items-center gap-md text-left group">
+<div class="w-10 h-10 rounded-full bg-surface-container overflow-hidden shrink-0 border border-white/10 relative">
+<img class="w-full h-full object-cover" data-alt="A professional corporate headshot of a young Indian woman, Manvi Mehta, smiling warmly. She is wearing a modern business blazer against a subtle, dark high-tech background with faint blue lighting accents reflecting an enterprise software environment. Ultra-realistic, 8k resolution, cinematic lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUSb2yjM-B1L1PU4Ew_1doLSTvqY2sbJUx5zXB8pgrAlQtps5Bfddxywy-8FEmY8SVDnEtS7bcSiy346bGLKKzQHW5COFgpzDeQ9JqTrxOrRKyFiTvQjd9B32m8CYb_BQ6E8dxLySRoKEIILuXnPv5i-I0NJjKFHwC6aw_Xese8k_SxBof_-bDUPnHhvv2es8J3OnHXQfRrAfsFw7z3T3me7okkRp_qnMKshi7ukcoLFvJxNkqu6ULI_xTohmY4aQiYj4qKuUooLf2"/>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<span class="font-body-md text-body-md text-on-surface font-semibold truncate group-hover:text-primary transition-colors">Manvi Mehta</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant truncate normal-case tracking-normal font-normal">Employee</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors opacity-0 group-hover:opacity-100 mr-1">login</span>
+</button>
+<button class="demo-card w-full rounded-lg p-sm flex items-center gap-md text-left group">
+<div class="w-10 h-10 rounded-full bg-surface-container overflow-hidden shrink-0 border border-white/10 relative">
+<img class="w-full h-full object-cover" data-alt="A professional corporate headshot of an older Indian man, Rahul Sharma, looking authoritative yet approachable. He is wearing a tailored suit against a subtle, dark high-tech background with faint blue lighting accents reflecting an enterprise software environment. Ultra-realistic, 8k resolution, cinematic lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBeHKG1VVM_cFYwOZoyADS7-olWKR6JGFsUK2k6gnUSlBTB-PShNpMJVSxzkmFvUod30ZvL-ir_3nt5oCWUlFV69sYI3Kvqm-TQ5ejNakBUrsdUClcPg_CJ-G-hyweRT3FR9PMxgA3Mu5XCCcf8AcCVAI6II4Ky2zF_75yy9wQqxRethIkWw0GMoOJbjTUwn7decge6PuRkQklvap_AD90QULamFSeGJq69am27Ojn5X5G3UeeECHdoql1tGsZ1t9ZY0ZNn-CR-3GaE"/>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<span class="font-body-md text-body-md text-on-surface font-semibold truncate group-hover:text-primary transition-colors">Rahul Sharma</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant truncate normal-case tracking-normal font-normal text-error-container font-medium">Board Admin</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors opacity-0 group-hover:opacity-100 mr-1">login</span>
+</button>
+</div>
+</div>
+<!-- Global Footer snippet context -->
+<div class="flex justify-center items-center mt-lg gap-md font-label-sm text-label-sm text-on-surface-variant">
+<a class="hover:text-primary transition-colors" href="#">Privacy</a>
+<span>•</span>
+<a class="hover:text-primary transition-colors" href="#">Terms</a>
+<span>•</span>
+<a class="hover:text-primary transition-colors" href="#">Security</a>
+</div>
+</main>
+</body></html>

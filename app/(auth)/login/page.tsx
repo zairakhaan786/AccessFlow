@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Lock, Mail, AlertCircle, ArrowRight, Sparkles } from "lucide-react";
 import GlassSpotlight from "@/components/auth/GlassSpotlight";
+import AutomationBackground from "@/components/auth/AutomationBackground";
 
 const DEMO_ACCOUNTS = [
   {
@@ -266,21 +267,8 @@ function LoginForm() {
 export default function LoginPage() {
   return (
     <div className="min-h-screen relative flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8 bg-[#0B1220] overflow-hidden">
-      {/* Background Ambient Orbs */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden z-0">
-        <div className="absolute -top-[20%] -left-[10%] w-[55vw] h-[55vw] rounded-full bg-gradient-to-br from-[#2F6FED]/25 to-[#4F46E5]/20 filter blur-[140px] animate-auroraSlow" />
-        <div className="absolute top-[40%] -right-[15%] w-[50vw] h-[50vw] rounded-full bg-gradient-to-bl from-[#0284C7]/20 to-[#2F6FED]/20 filter blur-[150px] animate-auroraReverse" />
-        <div className="absolute -bottom-[20%] left-[25%] w-[60vw] h-[60vw] rounded-full bg-gradient-to-tr from-[#6366F1]/20 to-[#3B82F6]/15 filter blur-[160px] animate-auroraSlow" />
-
-        {/* Subtle Fine Grid Texture */}
-        <div
-          className="absolute inset-0 opacity-[0.04]"
-          style={{
-            backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.15) 1px, transparent 1px)`,
-            backgroundSize: "32px 32px",
-          }}
-        />
-      </div>
+      {/* Automation / Robotics Shader Background */}
+      <AutomationBackground />
 
       <div className="relative z-10 w-full flex justify-center">
         <Suspense
