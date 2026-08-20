@@ -1,0 +1,132 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                String          @id @default(cuid())
+  name              String
+  email             String          @unique
+  passwordHash      String
+  role              String          @default("EMPLOYEE") // EMPLOYEE | BOARD_ADMIN
+  group             String          // e.g. "Product Team", "IT Support", "Marketing Team"
+  title             String?         // e.g. "Project Manager", "IT Support · Access Provider"
+  initials          String?
+  tone              String?         @default("#2563EB")
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  requestsMade      AccessRequest[] @relation("Requester")
+  requestsBenefited AccessRequest[] @relation("Beneficiary")
+  notifications     Notification[]
+  auditLogs         AuditLog[]
+
+  @@map("users")
+}
+
+model AccessItem {
+  id                 String              @id @default(cuid())
+  tool               String              // Monday.com, Salesforce, Zendesk
+  name               String              // Marketing Operations Board, etc.
+  category           String              @default("Board") // Board | Application
+  description        String
+  accessId           String?             // AC-1042, etc.
+  creator            String              // Sarah Thomas, etc.
+  group              String              // Marketing Team
+  eligibleGroups     String              // JSON string array e.g. '["Marketing Team", "Product Team"]'
+  approverId         String?
+  approverName       String              // Manvi Mehta
+  backupApproverId   String?
+  backupApproverName String              // Sarah Thomas
+  providerId         String?
+  providerName       String              // Rahul Sharma
+  automation         Boolean             @default(false)
+  requestType        String              @default("Board Access Request")
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+
+  requests           AccessRequest[]
+  idQueueItems       AccessIdQueueItem[]
+
+  @@map("access_items")
+}
+
+model AccessRequest {
+  id            String      @id // e.g. "NAR-10469"
+  accessItemId  String
+  accessItem    AccessItem  @relation(fields: [accessItemId], references: [id], onDelete: Cascade)
+  accessLabel   String      // e.g. "Monday.com – Marketing Operations Board"
+  
+  requesterId   String?
+  requester     User?       @relation("Requester", fields: [requesterId], references: [id], onDelete: SetNull)
+  requesterName String
+  
+  beneficiaryId String?
+  beneficiary   User?       @relation("Beneficiary", fields: [beneficiaryId], references: [id], onDelete: SetNull)
+  beneficiaryName String
+  
+  onBehalf      Boolean     @default(false)
+  isException   Boolean     @default(false)
+  reason        String?     // Exception reason
+  requiredUntil String?     // Required until date string
+  urgency       String?     @default("Medium") // Low, Medium, High, Urgent
+  
+  approverName  String
+  providerName  String
+  automation    Boolean     @default(false)
+  justification String
+  status        String      @default("Pending Approval") // "Pending Approval", "Pending Exception Approval", "Approved", "Provisioning", "Pending Manual Provisioning", "Access Provisioned", "Completed", "Rejected"
+  timeline      String      // JSON array of timeline steps
+  
+  submittedAt   DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  auditLogs     AuditLog[]
+
+  @@map("access_requests")
+}
+
+model AccessIdQueueItem {
+  id           String     @id @default(cuid())
+  accessItemId String
+  accessItem   AccessItem @relation(fields: [accessItemId], references: [id], onDelete: Cascade)
+  status       String     @default("Pending Governance Review") // "Pending Governance Review" | "Access ID Created"
+  requestedBy  String
+  requestedTs  String
+  approvedTs   String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@map("access_id_queue")
+}
+
+model AuditLog {
+  id        String         @id @default(cuid())
+  actorId   String?
+  actor     User?          @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  actorName String
+  action    String
+  detail    String
+  requestId String?
+  request   AccessRequest? @relation(fields: [requestId], references: [id], onDelete: SetNull)
+  timestamp DateTime       @default(now())
+
+  @@map("audit_logs")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      String   // "employee" | "admin"
+  text      String
+  channel   String   @default("portal") // "portal" | "slack"
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("notifications")
+}
