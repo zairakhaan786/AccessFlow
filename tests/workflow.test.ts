@@ -28,9 +28,23 @@ describe("AccessFlow State Machine & Workflow Unit Tests", () => {
     adminUser = (await prisma.user.findFirst({ where: { email: "rahul@company.com" } })) as any;
     approverUser = (await prisma.user.findFirst({ where: { email: "neha@company.com" } })) as any;
 
-    automatedItem = await prisma.accessItem.findFirst({ where: { automation: true, accessId: { not: null } } });
-    manualItem = await prisma.accessItem.findFirst({ where: { automation: false, accessId: { not: null } } });
-    noIdItem = await prisma.accessItem.findFirst({ where: { accessId: null } });
+    // Reset fixtures for idempotent test runs
+    await prisma.accessItem.updateMany({
+      where: { id: "acc-1" },
+      data: { automation: true, accessId: "AC-1042" },
+    });
+    await prisma.accessItem.updateMany({
+      where: { id: "acc-2" },
+      data: { automation: false, accessId: "AC-2077" },
+    });
+    await prisma.accessItem.updateMany({
+      where: { id: "acc-3" },
+      data: { accessId: null },
+    });
+
+    automatedItem = await prisma.accessItem.findUnique({ where: { id: "acc-1" } });
+    manualItem = await prisma.accessItem.findUnique({ where: { id: "acc-2" } });
+    noIdItem = await prisma.accessItem.findUnique({ where: { id: "acc-3" } });
   });
 
   it("1. Submits standard automated request and approves it (transitions directly to Completed for self)", async () => {
@@ -191,5 +205,61 @@ describe("AccessFlow State Machine & Workflow Unit Tests", () => {
       actorUser: adminUser,
     });
     expect(updated.backupApproverName).toBe("Rahul Sharma");
+  });
+
+  it("7. Race-Safe Manual Provisioning: Concurrent admin attempts to provision the same request are atomic and race-safe", async () => {
+    // Create a new manual request
+    const req = await submitRequestWorkflow({
+      accessItemId: manualItem.id,
+      beneficiaryName: employeeUser.name,
+      onBehalf: false,
+      justification: "Concurrency stress testing request.",
+      actorUser: employeeUser,
+    });
+
+    // Approve the request so it enters Pending Manual Provisioning
+    const approverActor = {
+      id: employeeUser.id,
+      name: manualItem.approverName,
+      email: "approver@company.com",
+      role: "EMPLOYEE",
+    };
+    await approveRequestWorkflow({
+      requestId: req.id,
+      actorUser: approverActor,
+    });
+
+    // Two admin actors attempting to provision the exact same request concurrently
+    const adminA = { id: adminUser.id, name: adminUser.name, email: adminUser.email, role: "BOARD_ADMIN" };
+    const adminB = { id: "admin-2", name: "Backup Admin", email: "backup@company.com", role: "BOARD_ADMIN" };
+
+    const results = await Promise.allSettled([
+      provisionManuallyWorkflow({ requestId: req.id, actorUser: adminA }),
+      provisionManuallyWorkflow({ requestId: req.id, actorUser: adminB }),
+    ]);
+
+    const fulfilled = results.filter((r) => r.status === "fulfilled");
+    const rejected = results.filter((r) => r.status === "rejected");
+
+    // Exactly 1 must succeed and exactly 1 must fail due to status guard / race condition
+    expect(fulfilled.length).toBe(1);
+    expect(rejected.length).toBe(1);
+
+    const rejectionReason = (rejected[0] as PromiseRejectedResult).reason.message;
+    expect(
+      rejectionReason.includes("Concurrency Conflict") ||
+      rejectionReason.includes("Race condition prevented")
+    ).toBe(true);
+
+    // Verify DB integrity: final status is Completed and only one provisioning audit entry exists for this run
+    const finalRequest = await prisma.accessRequest.findUnique({
+      where: { id: req.id },
+    });
+    expect(finalRequest?.status).toBe("Completed");
+
+    const auditCount = await prisma.auditLog.count({
+      where: { requestId: req.id, action: "Access provisioned (manual)" },
+    });
+    expect(auditCount).toBe(1);
   });
 });

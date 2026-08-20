@@ -459,69 +459,98 @@ export async function provisionManuallyWorkflow({
   requestId: string;
   actorUser: { id: string; name: string; email: string; role: string };
 }) {
-  const request = await prisma.accessRequest.findUnique({
-    where: { id: requestId },
-  });
+  return await prisma.$transaction(async (tx) => {
+    // 1. Fetch request inside transaction with status check
+    const request = await tx.accessRequest.findUnique({
+      where: { id: requestId },
+    });
 
-  if (!request) {
-    throw new Error("Request not found");
-  }
-
-  if (request.status !== "Pending Manual Provisioning") {
-    throw new Error(`Request is not awaiting manual provisioning (Status: ${request.status})`);
-  }
-
-  if (request.providerName !== actorUser.name && actorUser.role !== "BOARD_ADMIN") {
-    throw new Error("Only the assigned access provider or admin can provision this request.");
-  }
-
-  const nowTs = formatCurrentTimestamp();
-  const existingTimeline: TimelineStep[] = JSON.parse(request.timeline);
-  const finalStatus = request.onBehalf ? "Access Provisioned" : "Completed";
-
-  const updatedTimeline = existingTimeline.map((s, i) => {
-    if (i === 2) {
-      return { label: "Access Provisioned", actor: actorUser.name, ts: nowTs, state: "done" as const };
+    if (!request) {
+      throw new Error("Request not found");
     }
-    if (i === 3) {
-      return request.onBehalf
-        ? { label: "Access Provisioned — awaiting closure", actor: "", ts: "", state: "current" as const }
-        : { label: "Completed", actor: "System", ts: nowTs, state: "done" as const };
+
+    if (request.status !== "Pending Manual Provisioning") {
+      throw new Error(
+        `Concurrency Conflict: Request ${requestId} is in status '${request.status}' and cannot be provisioned. It may have already been provisioned by another administrator.`
+      );
     }
-    return s;
-  });
 
-  const updatedRequest = await prisma.accessRequest.update({
-    where: { id: requestId },
-    data: {
-      status: finalStatus,
-      timeline: JSON.stringify(updatedTimeline),
-    },
-  });
+    if (request.providerName !== actorUser.name && actorUser.role !== "BOARD_ADMIN") {
+      throw new Error("Only the assigned access provider or admin can provision this request.");
+    }
 
-  // Audit Log
-  await prisma.auditLog.create({
-    data: {
-      actorId: actorUser.id,
-      actorName: actorUser.name,
-      action: "Access provisioned (manual)",
-      detail: `${requestId} — ${request.accessLabel}`,
-      requestId: requestId,
-    },
-  });
+    const nowTs = formatCurrentTimestamp();
+    const existingTimeline: TimelineStep[] = JSON.parse(request.timeline);
+    const finalStatus = request.onBehalf ? "Access Provisioned" : "Completed";
 
-  // Notification
-  await prisma.notification.create({
-    data: {
-      userId: request.requesterId,
-      role: "employee",
-      text: `Access has been provisioned for ${requestId}.`,
-      channel: "portal",
-      read: false,
-    },
-  });
+    const updatedTimeline = existingTimeline.map((s, i) => {
+      if (i === 2) {
+        return {
+          label: "Access Provisioned",
+          actor: actorUser.name,
+          ts: nowTs,
+          state: "done" as const,
+        };
+      }
+      if (i === 3) {
+        return request.onBehalf
+          ? {
+              label: "Access Provisioned — awaiting closure",
+              actor: "",
+              ts: "",
+              state: "current" as const,
+            }
+          : { label: "Completed", actor: "System", ts: nowTs, state: "done" as const };
+      }
+      return s;
+    });
 
-  return updatedRequest;
+    // 2. Perform conditional update with status guard
+    // Using updateMany or find + update inside transaction guarantees atomic state transition
+    const updateResult = await tx.accessRequest.updateMany({
+      where: {
+        id: requestId,
+        status: "Pending Manual Provisioning",
+      },
+      data: {
+        status: finalStatus,
+        timeline: JSON.stringify(updatedTimeline),
+        updatedAt: new Date(),
+      },
+    });
+
+    if (updateResult.count === 0) {
+      throw new Error(
+        `Race condition prevented: Request ${requestId} was already provisioned concurrently by another administrator.`
+      );
+    }
+
+    // 3. Append Audit Log atomically
+    await tx.auditLog.create({
+      data: {
+        actorId: actorUser.id,
+        actorName: actorUser.name,
+        action: "Access provisioned (manual)",
+        detail: `${requestId} — ${request.accessLabel}`,
+        requestId: requestId,
+      },
+    });
+
+    // 4. Dispatch Notification atomically
+    await tx.notification.create({
+      data: {
+        userId: request.requesterId,
+        role: "employee",
+        text: `Access has been provisioned for ${requestId}.`,
+        channel: "portal",
+        read: false,
+      },
+    });
+
+    return await tx.accessRequest.findUniqueOrThrow({
+      where: { id: requestId },
+    });
+  });
 }
 
 export async function closeRequestWorkflow({

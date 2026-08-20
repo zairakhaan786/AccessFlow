@@ -1,39 +1,37 @@
-# AccessFlow — Governed Access Management System (New Age Portal)
+# AccessFlow — Governed Access Management Portal
 
-> A production-grade, full-stack enterprise access management and board governance portal built with **Next.js 14 (App Router)**, **TypeScript**, **Tailwind CSS**, **Prisma ORM**, **NextAuth.js**, **Zod**, and **Vitest**.
-
-Converted 1:1 from the `access-management.html` prototype into a resilient, multi-persona web application with server-enforced state transitions, immutable audit logging, and automated/manual provisioning pipelines.
+I built this application to convert the static `access-management.html` prototype into a real, production-ready full-stack application. Rather than just making the UI interactive, I focused on turning the prototype's state model into server-enforced business logic: real role-based permissions, database-backed access requests, multi-step provisioning lifecycles, and governed board configuration.
 
 ---
 
-## 🚀 Quick Start (One-Command Local Dev)
+## 🚀 Quick Start (Local Dev)
 
-Clone the repository and run:
+To get the app running locally in one command:
 
 ```bash
 # 1. Install dependencies
 npm install
 
-# 2. Synchronize database and seed demo data
+# 2. Sync database schema and seed demo records
 npx prisma db push && npm run seed
 
-# 3. Start local development server
+# 3. Start the Next.js dev server
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000) to view the portal.
 
 ---
 
-## 👥 Seed Accounts & Demo Credentials
+## 👥 Demo Accounts & Logins
 
-The database is pre-populated with realistic catalog items, active requests in various statuses, audit logs, and notifications. You can use the **1-Click Demo Account Login** on the login page or enter credentials manually:
+The database is pre-seeded with sample users, catalog boards, requests in various stages, audit logs, and notifications. You can use the 1-click switcher on the login page or enter credentials manually:
 
-| Persona | Name | Email | Password | Role & Highlights |
+| Persona | Name | Email | Password | Role & Context |
 | :--- | :--- | :--- | :--- | :--- |
-| **Employee** | Manvi Mehta | `manvi@company.com` | `emp123` | Product Team Lead · Approver for Marketing & Support, requester for Salesforce |
-| **Board Admin** | Rahul Sharma | `rahul@company.com` | `admin123` | IT Support & Access Provider · Full governance queue, board configs, manual provisioning |
-| **Employee** | Ananya Rao | `ananya@company.com` | `emp123` | Support Team · Pending request awaiting approval from Manvi |
+| **Employee** | Manvi Mehta | `manvi@company.com` | `emp123` | Product Team · Approver for Marketing & Zendesk, requester for Salesforce |
+| **Board Admin** | Rahul Sharma | `rahul@company.com` | `admin123` | IT Support & Access Provider · Handles manual queue, Access ID governance, board settings |
+| **Employee** | Ananya Rao | `ananya@company.com` | `emp123` | Support Team · Has a pending request awaiting review from Manvi |
 
 ---
 
@@ -41,65 +39,52 @@ The database is pre-populated with realistic catalog items, active requests in v
 
 - **Framework**: Next.js 14+ (App Router, Server Components & Server Actions)
 - **Language**: TypeScript
-- **Styling**: Tailwind CSS configured with exact prototype design tokens (`--navy #0F1B33`, `--accent #2F6FED`, status badges, container radii)
-- **Database & ORM**: Prisma ORM (SQLite for zero-config local dev, PostgreSQL / Neon ready for production)
-- **Authentication**: NextAuth.js (Credentials provider, bcrypt password hashing, JWT session strategy, persisted cookies)
-- **Validation**: Zod for runtime schema validation on all mutations and API routes
-- **Testing**: Vitest for workflow state machine unit testing
+- **Styling**: Tailwind CSS with the prototype's exact colors (`--navy #0F1B33`, `--accent #2F6FED`, badge variants, layout radii)
+- **Database & ORM**: Prisma ORM (SQLite for local zero-config setup, PostgreSQL/Neon ready for production)
+- **Authentication**: NextAuth.js (Credentials provider with bcrypt password hashing, JWT sessions, route protection)
+- **Validation**: Zod for form inputs and Server Action arguments
+- **Testing**: Vitest for state machine transitions and concurrency tests
 
 ---
 
-## 🏗 Architecture & Data Model
-
-### Entity Relationship & Core Tables
-
-1. **`User`**: Accounts with roles (`EMPLOYEE`, `BOARD_ADMIN`), department groups, titles, avatar colors, and hashed credentials.
-2. **`AccessItem`**: Governed catalog of boards and applications with eligibility groups, assigned approvers, backup approvers, access providers, and automation flags.
-3. **`AccessRequest`**: Governed request instances with lifecycle statuses:
-   - `Pending Approval`
-   - `Pending Exception Approval`
-   - `Approved`
-   - `Provisioning`
-   - `Pending Manual Provisioning`
-   - `Access Provisioned`
-   - `Completed`
-   - `Rejected`
-4. **`AccessIdQueueItem`**: Governed review queue for unissued Board Access IDs (`Pending Governance Review` → `Access ID Created`).
-5. **`AuditLog`**: Append-only immutable trail logging every state change, configuration update, and actor timestamp.
-6. **`Notification`**: Real-time multi-channel notifications (Portal / Slack) for requesters, approvers, and admins.
-
----
-
-## 🔄 Core Workflows & Business Rules
+## 🔄 How the Workflows Work
 
 1. **Access Directory & Eligibility**:
-   - Live search by keyword, tool, team, or category.
-   - Eligibility is evaluated dynamically based on the logged-in user's department.
-2. **Request Submission (Self vs. On-Behalf)**:
-   - Standard requests: Self or On-Behalf of another employee (with dedicated employee selector).
-   - Exception requests: For out-of-group access, requiring justification, reason, required until date, and urgency level.
+   - The directory searches across tools, board names, groups, and categories.
+   - Eligibility is dynamically evaluated based on the logged-in user's department (`eligibleGroups` vs `user.group`).
+2. **Access Requests (Self vs. On-Behalf)**:
+   - Users can submit requests for themselves or on behalf of colleagues using the employee picker.
+   - If an employee needs access to an out-of-group board, they can submit an **Access Exception** with a reason, required-until date, and urgency level.
 3. **Approvals**:
-   - Approver or backup approver reviews request details, business justification, and beneficiary eligibility.
-   - Rejection requires an explanatory reason and updates the timeline accordingly.
-4. **Automated vs. Manual Provisioning**:
-   - **Automated (`automation: true`)**: Approval immediately transitions request to `Completed` (or `Access Provisioned` for on-behalf).
-   - **Manual (`automation: false`)**: Approval routes request to the Board Admin's manual provisioning queue. The admin provisions access, transitioning to `Completed` (or `Access Provisioned`).
-   - **On-Behalf Closure**: The requester of record can explicitly close provisioned requests on behalf of the beneficiary.
+   - Approvers only see requests routed to them.
+   - Rejections strictly require an explanatory reason, which updates the timeline and notifies the requester.
+4. **Provisioning**:
+   - **Automated (`automation: true`)**: Approval immediately transitions the request to `Completed` (or `Access Provisioned` for on-behalf).
+   - **Manual (`automation: false`)**: Approval routes the request to the Board Admin's manual queue (`Pending Manual Provisioning`). The admin explicitly clicks "Provision Access" to transition the request.
+   - **On-Behalf Closure**: Requesters can close provisioned on-behalf requests once access is verified.
 5. **Access ID Governance Review**:
-   - Boards lacking an Access ID cannot be requested immediately. Users submit an Access ID Creation Request.
-   - Board Admins review the request, perform duplicate verification, and issue a unique `AC-XXXX` ID.
+   - If a board lacks an Access ID, users submit an Access ID Creation Request.
+   - Board Admins review the request, verify duplicates, and issue a unique `AC-XXXX` ID to unblock future requests.
 6. **Board Configuration**:
-   - Board Admins can toggle automated provisioning on/off in real time.
-   - Approvers, backup approvers, and access providers can be edited with changes recorded to the audit log.
+   - Admins can toggle automated provisioning on/off and update approvers/providers. Every change appends an immutable audit log entry.
 
 ---
 
-## 🧪 Running Automated Tests
+## 🔒 Part 4 Improvement: Race-Safe Manual Provisioning
 
-Run the Vitest test suite covering state machine transitions, automated/manual provisioning, rejections, exceptions, and governance review:
+For the Part 4 improvement, I chose **Option A: Race-Safe Manual Provisioning**. 
+
+I prioritized correctness over surface-level features: in a high-volume IT environment, two admins concurrently reviewing the manual queue could easily double-provision the same request without atomic database guards. I wrapped the manual provisioning transition inside an interactive database transaction (`prisma.$transaction`) with a conditional status guard (`where: { id: requestId, status: "Pending Manual Provisioning" }`). If a second admin attempts to provision simultaneously, the transaction detects the zero-row match and rejects cleanly with a concurrency error.
+
+I also wrote an automated concurrency stress test in Vitest (`tests/workflow.test.ts`) that fires simultaneous provisioning calls to prove that exactly one transaction succeeds and the other is safely rejected.
+
+---
+
+## 🧪 Running Tests
+
+To run the Vitest test suite covering all state transitions, automated/manual provisioning, rejections, governance, and concurrency guards:
 
 ```bash
-# Run unit tests
 npm run test
 ```
 
@@ -107,68 +92,21 @@ npm run test
 
 ## 🌐 Production Deployment (Vercel + Neon / Supabase)
 
-### 1. Environment Variables in Vercel Dashboard
+To deploy on Vercel:
 
-When deploying to Vercel, configure the following Environment Variables in **Project Settings → Environment Variables**:
-
-| Variable | Description | Example / Format |
-| :--- | :--- | :--- |
-| `DATABASE_URL` | PostgreSQL connection string | `postgresql://user:password@ep-cool-project-123456.us-east-2.aws.neon.tech/accessflow?sslmode=require` |
-| `NEXTAUTH_SECRET` | 32+ character random secret string | `openssl rand -base64 32` |
-| `NEXTAUTH_URL` | Canonical URL of your deployment | `https://your-project.vercel.app` (or Vercel auto-detected URL) |
-
-### 2. Switching Prisma to PostgreSQL for Production
-
-In `prisma/schema.prisma`:
-```prisma
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-```
-
-Then run migrations on your production database:
-```bash
-npx prisma migrate deploy
-npx prisma db seed
-```
-
----
-
-## 📂 Project Structure
-
-```
-AccessFlow/
-├── app/
-│   ├── (auth)/
-│   │   ├── login/page.tsx       # Auth login with 1-click demo switcher
-│   │   └── signup/page.tsx      # User registration form
-│   ├── actions/
-│   │   └── requests.ts          # Server Actions for workflow mutations
-│   ├── api/
-│   │   └── auth/                # NextAuth & registration endpoints
-│   ├── globals.css              # Prototype design tokens & badge CSS
-│   ├── layout.tsx               # Root layout with AuthProvider & ToastRoot
-│   └── page.tsx                 # Server Component dashboard
-├── components/
-│   ├── dashboard/               # Search, MyRequests, Approvals, Admin queues
-│   ├── drawers/                 # Details, Forms, Status, & Config drawers
-│   ├── layout/                  # Navigation header & notification panel
-│   ├── modals/                  # Close, Reject, and Confirm modals
-│   ├── providers/               # NextAuth SessionProvider
-│   └── ui/                      # Badges, Timeline, and Toast container
-├── lib/
-│   ├── auth.ts                  # NextAuth credentials config & callbacks
-│   ├── prisma.ts                # Prisma singleton client
-│   ├── services/
-│   │   └── workflow.ts          # State machine business logic & audit writer
-│   └── validations/
-│       └── request.ts           # Zod input validation schemas
-├── prisma/
-│   ├── schema.prisma            # Prisma schema models & relations
-│   └── seed.ts                  # Seed script with demo data
-├── tests/
-│   └── workflow.test.ts         # Vitest unit test suite
-├── .env.example                 # Example environment variables
-└── README.md                    # Project documentation
-```
+1. In `prisma/schema.prisma`, switch datasource provider:
+   ```prisma
+   datasource db {
+     provider = "postgresql"
+     url      = env("DATABASE_URL")
+   }
+   ```
+2. Set these environment variables in your Vercel Project Settings:
+   - `DATABASE_URL`: Your PostgreSQL connection string (e.g. `postgresql://user:password@ep-cool-project-123456.us-east-2.aws.neon.tech/accessflow?sslmode=require`)
+   - `NEXTAUTH_SECRET`: A 32+ character random string
+   - `NEXTAUTH_URL`: Your deployment URL (e.g. `https://access-flow.vercel.app`)
+   - `NEXT_PUBLIC_ENABLE_DEMO_ACCOUNTS`: Optional (`"true"` to enable the quick demo switcher for evaluation, `"false"` to disable)
+3. Deploy and run database migrations:
+   ```bash
+   npx prisma migrate deploy && npx prisma db seed
+   ```

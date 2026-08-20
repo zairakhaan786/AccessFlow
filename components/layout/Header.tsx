@@ -85,6 +85,10 @@ export default function Header({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const showDemoSwitcher =
+    process.env.NEXT_PUBLIC_ENABLE_DEMO_ACCOUNTS === "true" ||
+    process.env.NODE_ENV !== "production";
+
   return (
     <header className="sticky top-0 z-30 bg-white border-b border-[var(--border)]">
       <div className="w-[92%] max-w-[1800px] mx-auto h-16 flex items-center justify-between gap-4">
@@ -105,29 +109,35 @@ export default function Header({
 
         {/* Header Right */}
         <div className="flex items-center gap-3.5">
-          {/* Persona Switcher Buttons for seamless reviewer toggling */}
-          <div className="flex items-center border border-[var(--border)] bg-white rounded-[9px] p-[3px]">
-            <button
-              onClick={() => handleSwitchUser("manvi@company.com")}
-              className={`px-3.5 py-1.5 rounded-[6px] text-[12.5px] font-semibold transition ${
-                currentUser.role !== "BOARD_ADMIN"
-                  ? "bg-[var(--navy)] text-white"
-                  : "text-[#6B7280] hover:bg-slate-50"
-              }`}
-            >
-              Employee View
-            </button>
-            <button
-              onClick={() => handleSwitchUser("rahul@company.com")}
-              className={`px-3.5 py-1.5 rounded-[6px] text-[12.5px] font-semibold transition ${
-                currentUser.role === "BOARD_ADMIN"
-                  ? "bg-[var(--navy)] text-white"
-                  : "text-[#6B7280] hover:bg-slate-50"
-              }`}
-            >
-              Board Admin View
-            </button>
-          </div>
+          {/* Persona Switcher Buttons (gated in production) */}
+          {showDemoSwitcher ? (
+            <div className="flex items-center border border-[var(--border)] bg-white rounded-[9px] p-[3px]">
+              <button
+                onClick={() => handleSwitchUser("manvi@company.com")}
+                className={`px-3.5 py-1.5 rounded-[6px] text-[12.5px] font-semibold transition ${
+                  currentUser.role !== "BOARD_ADMIN"
+                    ? "bg-[var(--navy)] text-white"
+                    : "text-[#6B7280] hover:bg-slate-50"
+                }`}
+              >
+                Employee View
+              </button>
+              <button
+                onClick={() => handleSwitchUser("rahul@company.com")}
+                className={`px-3.5 py-1.5 rounded-[6px] text-[12.5px] font-semibold transition ${
+                  currentUser.role === "BOARD_ADMIN"
+                    ? "bg-[var(--navy)] text-white"
+                    : "text-[#6B7280] hover:bg-slate-50"
+                }`}
+              >
+                Board Admin View
+              </button>
+            </div>
+          ) : (
+            <div className="text-xs font-semibold px-3 py-1 bg-slate-100 text-slate-700 rounded-md">
+              {currentUser.role === "BOARD_ADMIN" ? "Board Admin" : "Employee"}
+            </div>
+          )}
 
           {/* Notifications Dropdown */}
           <div className="relative" ref={notifRef}>

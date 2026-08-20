@@ -174,14 +174,16 @@ function LoginForm() {
         </div>
       </div>
 
-      {/* Demo Quick Logins (Evaluator Convenience) */}
-      <div className="mt-8">
-        <div className="flex items-center gap-2 mb-3">
-          <UserCheck className="w-4 h-4 text-[var(--muted-2)]" />
-          <span className="text-xs font-bold uppercase tracking-wider text-[var(--muted-2)]">
-            1-Click Demo Accounts
-          </span>
-        </div>
+      {/* Demo Quick Logins (Evaluator Convenience - Gated in Production) */}
+      {(process.env.NEXT_PUBLIC_ENABLE_DEMO_ACCOUNTS === "true" ||
+        process.env.NODE_ENV !== "production") && (
+        <div className="mt-8">
+          <div className="flex items-center gap-2 mb-3">
+            <UserCheck className="w-4 h-4 text-[var(--muted-2)]" />
+            <span className="text-xs font-bold uppercase tracking-wider text-[var(--muted-2)]">
+              1-Click Demo Accounts
+            </span>
+          </div>
 
         <div className="space-y-2.5">
           {DEMO_ACCOUNTS.map((acc) => (
@@ -229,6 +231,7 @@ function LoginForm() {
           ))}
         </div>
       </div>
+      )}
     </div>
   );
 }
