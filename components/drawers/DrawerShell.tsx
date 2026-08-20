@@ -35,11 +35,11 @@ export default function DrawerShell({
   return (
     <>
       <div
-        className="overlay fixed inset-0 bg-[#0F172A]/35 z-50 animate-fadeIn"
+        className="overlay fixed inset-0 bg-[#0F172A]/40 backdrop-blur-xs z-50 animate-fadeIn"
         onClick={onClose}
       />
-      <div className="drawer fixed top-0 right-0 h-full w-[clamp(420px,38vw,640px)] max-w-full bg-white shadow-2xl z-[51] overflow-y-auto animate-drawerIn flex flex-col">
-        <div className="drawer-head sticky top-0 bg-white z-10 flex items-start justify-between p-6 border-b border-[var(--border)]">
+      <div className="drawer fixed top-0 right-0 h-full w-[clamp(420px,38vw,640px)] max-w-full bg-white/98 backdrop-blur-xl shadow-2xl z-[51] overflow-y-auto animate-drawerIn flex flex-col border-l border-[var(--border)]">
+        <div className="drawer-head sticky top-0 bg-white/95 backdrop-blur-md z-10 flex items-start justify-between p-6 border-b border-[var(--border)]">
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-[18px] font-extrabold text-[#111827]">{title}</h3>

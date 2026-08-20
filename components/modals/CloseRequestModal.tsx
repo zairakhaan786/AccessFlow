@@ -34,8 +34,8 @@ export default function CloseRequestModal({
   };
 
   return (
-    <div className="modal-overlay fixed inset-0 bg-[#0F172A]/50 z-60 flex items-center justify-center p-4 animate-fadeIn">
-      <div className="modal-box bg-white rounded-[var(--radius-container)] w-full max-w-[440px] shadow-2xl overflow-hidden animate-modalIn">
+    <div className="modal-overlay fixed inset-0 bg-[#0F172A]/45 backdrop-blur-xs z-60 flex items-center justify-center p-4 animate-fadeIn">
+      <div className="modal-box bg-white rounded-[var(--radius-container)] w-full max-w-[440px] shadow-2xl overflow-hidden animate-modalIn border border-[var(--border)]">
         <div className="modal-head flex items-center justify-between p-4.5 px-5.5 border-b border-[var(--border)]">
           <h3 className="text-[15px] font-bold text-[#111827]">Close request</h3>
           <button
