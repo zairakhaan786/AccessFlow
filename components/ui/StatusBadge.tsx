@@ -4,13 +4,13 @@ import { CheckCircle2, Circle, Clock, Check, Lock, AlertTriangle, Shield } from 
 export const STATUS_CLASSES: Record<string, string> = {
   "Pending Approval": "badge-amber",
   "Pending Exception Approval": "badge-amber",
-  "Approved": "badge-blue",
-  "Provisioning": "badge-blue",
-  "Pending Manual Provisioning": "badge-orange",
+  "Pending Manual Provisioning": "badge-amber",
+  "Pending Governance Review": "badge-amber",
+  "Approved": "badge-green",
+  "Provisioning": "badge-teal",
   "Access Provisioned": "badge-teal",
   "Completed": "badge-green",
   "Rejected": "badge-red",
-  "Pending Governance Review": "badge-violet",
 };
 
 export function StatusBadge({ status }: { status: string }) {

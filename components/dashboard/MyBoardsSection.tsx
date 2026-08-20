@@ -50,7 +50,7 @@ export default function MyBoardsSection({
                   {a.tool} – {a.name}
                 </span>
                 {a.automation ? (
-                  <span className="badge badge-indigo">Automated</span>
+                  <span className="badge badge-teal">Automated</span>
                 ) : (
                   <span className="badge badge-gray">Manual</span>
                 )}

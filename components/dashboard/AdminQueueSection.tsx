@@ -40,7 +40,7 @@ export default function AdminQueueSection({
         </div>
 
         {queue.length > 0 && (
-          <span className="badge badge-orange">{queue.length} pending</span>
+          <span className="badge badge-amber">{queue.length} pending</span>
         )}
       </div>
 

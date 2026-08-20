@@ -64,9 +64,9 @@ void main() {
     float t = u_time * 0.15;
     
     // Deep blue background to match the AccessFlow dark theme
-    vec3 baseCol = vec3(0.04, 0.07, 0.13); // #0B1220
+    vec3 baseCol = vec3(0.06, 0.11, 0.20); // #0F1B33
     vec3 accentCol = vec3(0.18, 0.44, 0.93); // #2F6FED
-    vec3 deepCol = vec3(0.02, 0.04, 0.08); // Darker for depth blooms
+    vec3 deepCol = vec3(0.04, 0.07, 0.13); // Darker for depth blooms
     
     // Subtle grid/circuit lines
     vec2 grid = fract(p * 4.0 + t * 0.1);

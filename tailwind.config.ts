@@ -10,21 +10,21 @@ const config: Config = {
     extend: {
       colors: {
         navy: {
-          DEFAULT: "#0F1B33",
-          soft: "#16233F",
+          DEFAULT: "var(--navy)",
+          soft: "var(--navy-soft)",
         },
         accent: {
-          DEFAULT: "#2F6FED",
-          dark: "#1E4FC7",
+          DEFAULT: "var(--accent)",
+          dark: "var(--accent-dark)",
         },
         surface: {
-          bg: "#F5F6F8",
-          border: "#E5E7EB",
+          bg: "var(--bg)",
+          border: "var(--border)",
         },
         customText: {
-          DEFAULT: "#111827",
-          muted: "#6B7280",
-          muted2: "#9CA3AF",
+          DEFAULT: "var(--text)",
+          muted: "var(--muted)",
+          muted2: "var(--muted-2)",
         },
       },
       borderRadius: {

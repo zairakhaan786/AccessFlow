@@ -95,7 +95,7 @@ function LoginForm() {
   return (
     <div
       ref={cardRef}
-      className="relative w-full max-w-[430px] rounded-2xl bg-[#0F172A]/80 backdrop-blur-2xl border border-white/[0.18] shadow-2xl p-8 sm:p-9 text-white overflow-hidden transition-all duration-300 animate-fadeIn"
+      className="relative w-full max-w-[430px] rounded-2xl bg-[#16233F]/80 backdrop-blur-2xl border border-white/[0.18] shadow-2xl p-8 sm:p-9 text-white overflow-hidden transition-all duration-300 animate-fadeIn"
       style={{
         boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.3)",
       }}
@@ -266,7 +266,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen relative flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8 bg-[#0B1220] overflow-hidden">
+    <div className="min-h-screen relative flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8 bg-[#0F1B33] overflow-hidden">
       {/* Automation / Robotics Shader Background */}
       <AutomationBackground />
 

@@ -77,7 +77,7 @@ export default function AccessIdGovernanceSection({
                   Requested by {q.requestedBy} · {q.requestedTs}
                 </div>
               </div>
-              <span className="badge badge-violet">Pending Review</span>
+              <span className="badge badge-amber">Pending Review</span>
             </div>
 
             <div className="flex items-center gap-1.5 mt-3 text-[11.5px] text-[#15803D] bg-[#F0FDF4] border border-[#BBF7D0] rounded-[8px] px-3 py-2 w-fit">

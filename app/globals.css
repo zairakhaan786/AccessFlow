@@ -78,7 +78,7 @@ input, select, textarea {
 }
 
 .badge-amber {
-  background: rgba(254, 243, 199, 0.85);
+  background: #FFFBEB;
   color: #B45309;
   border-color: #FDE68A;
 }
@@ -96,20 +96,20 @@ input, select, textarea {
 }
 
 .badge-teal {
-  background: rgba(240, 253, 250, 0.85);
+  background: #F0FDFA;
   color: #0F766E;
   border-color: #99F6E4;
 }
 
 .badge-green {
-  background: rgba(240, 253, 244, 0.85);
+  background: #F0FDF4;
   color: #15803D;
   border-color: #BBF7D0;
 }
 
 .badge-red {
-  background: rgba(254, 242, 242, 0.85);
-  color: #B91C1C;
+  background: #FEF2F2;
+  color: #DC2626;
   border-color: #FECACA;
 }
 

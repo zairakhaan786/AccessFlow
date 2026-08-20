@@ -94,7 +94,7 @@ export default function MyRequestsSection({
                     </span>
                     {r.category && <CategoryBadge category={r.category} />}
                     {r.onBehalf && (
-                      <span className="badge badge-violet">
+                      <span className="badge badge-amber">
                         On behalf of {r.beneficiaryName}
                       </span>
                     )}
