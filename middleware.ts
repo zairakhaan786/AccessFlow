@@ -14,6 +14,7 @@ export default withAuth(
     return NextResponse.next();
   },
   {
+    secret: process.env.NEXTAUTH_SECRET || "accessflow-super-secret-key-32-chars-long-min-prod",
     callbacks: {
       authorized: ({ token }) => !!token,
     },
