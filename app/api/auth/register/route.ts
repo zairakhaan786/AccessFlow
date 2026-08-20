@@ -77,10 +77,22 @@ export async function POST(req: Request) {
       { message: "Account created successfully", user: newUser },
       { status: 201 }
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error("Registration error:", error);
+    
+    // Surface Prisma connection or missing table errors directly to the UI
+    let errorMessage = "Internal server error occurred";
+    if (error.code === "P2021") {
+      errorMessage = "Database not initialized. Please run 'npx prisma db push' or migrations on your production database.";
+    } else if (error.message?.includes("DATABASE_URL")) {
+      errorMessage = "DATABASE_URL is missing in Vercel Environment Variables.";
+    } else if (error.message) {
+      // Provide a sanitized version of the Prisma error for debugging
+      errorMessage = "Database Error: " + error.message.split("\n").slice(-1)[0];
+    }
+
     return NextResponse.json(
-      { error: "Internal server error occurred" },
+      { error: errorMessage },
       { status: 500 }
     );
   }
