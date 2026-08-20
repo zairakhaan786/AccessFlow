@@ -1,9 +1,10 @@
 "use client";
 import { formatClientDate } from "@/lib/utils";
 
-import React from "react";
-import { ClipboardCheck, ChevronRight } from "lucide-react";
+import React, { useState } from "react";
+import { ClipboardCheck, ChevronRight, Check, X } from "lucide-react";
 import { RequestItem } from "./MyRequestsSection";
+import { approveRequestAction, rejectRequestAction } from "@/app/actions/requests";
 
 interface ApprovalsSectionProps {
   requests: RequestItem[];
@@ -16,11 +17,37 @@ export default function ApprovalsSection({
   currentUserName,
   onOpenApprovalDetail,
 }: ApprovalsSectionProps) {
+  const [isProcessing, setIsProcessing] = useState<string | null>(null);
+
   const pendingApprovals = requests.filter(
     (r) =>
       r.approverName.toLowerCase() === currentUserName.toLowerCase() &&
       (r.status === "Pending Approval" || r.status === "Pending Exception Approval")
   );
+
+  const handleQuickApprove = async (e: React.MouseEvent, requestId: string) => {
+    e.stopPropagation();
+    setIsProcessing(requestId);
+    try {
+      await approveRequestAction({ requestId });
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsProcessing(null);
+    }
+  };
+
+  const handleQuickReject = async (e: React.MouseEvent, requestId: string) => {
+    e.stopPropagation();
+    setIsProcessing(requestId);
+    try {
+      await rejectRequestAction({ requestId, reason: "Rejected via quick action" });
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsProcessing(null);
+    }
+  };
 
   if (pendingApprovals.length === 0) return null;
 
@@ -82,7 +109,29 @@ export default function ApprovalsSection({
                 </div>
               </div>
 
-              <ChevronRight className="w-4 h-4 text-[#D1D5DB] flex-shrink-0" />
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <button
+                  disabled={isProcessing === r.id}
+                  onClick={(e) => handleQuickReject(e, r.id)}
+                  className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-red-600 hover:bg-red-50 border border-transparent hover:border-red-100 transition-colors disabled:opacity-50"
+                  title="Quick Reject"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+                <button
+                  disabled={isProcessing === r.id}
+                  onClick={(e) => handleQuickApprove(e, r.id)}
+                  className="w-8 h-8 rounded-lg flex items-center justify-center text-white bg-[var(--accent)] hover:bg-[var(--accent-dark)] shadow-sm transition-colors disabled:opacity-50"
+                  title="Quick Approve"
+                >
+                  {isProcessing === r.id ? (
+                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <Check className="w-4 h-4" />
+                  )}
+                </button>
+                <ChevronRight className="w-4 h-4 text-[#D1D5DB] ml-1" />
+              </div>
             </div>
           );
         })}

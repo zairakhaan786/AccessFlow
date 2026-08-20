@@ -96,13 +96,38 @@ The database is pre-seeded with sample users, catalog boards, requests in variou
 
 ---
 
-## 🔒 Part 4 Improvement: Race-Safe Manual Provisioning
+## 🔒 Part 4 Improvements
 
-For the Part 4 improvement, I chose **Option A: Race-Safe Manual Provisioning**. 
+For the Part 4 improvements, I implemented two major features focused on backend robustness and administrative UX:
 
+**1. Race-Safe Manual Provisioning**
 I prioritized correctness over surface-level features: in a high-volume IT environment, two admins concurrently reviewing the manual queue could easily double-provision the same request without atomic database guards. I wrapped the manual provisioning transition inside an interactive database transaction (`prisma.$transaction`) with a conditional status guard (`where: { id: requestId, status: "Pending Manual Provisioning" }`). If a second admin attempts to provision simultaneously, the transaction detects the zero-row match and rejects cleanly with a concurrency error.
 
-I also wrote an automated concurrency stress test in Vitest (`tests/workflow.test.ts`) that fires simultaneous provisioning calls to prove that exactly one transaction succeeds and the other is safely rejected.
+**2. Inline Quick-Approvals for Board Admins**
+*Problem:* The prototype required Board Admins to click into each pending request to open a drawer, review the details, and then approve/reject. For high-volume queues, this leads to significant click fatigue.
+*Solution:* I added inline **Quick Approve** and **Quick Reject** action buttons directly on the Governance Queue table rows (`ApprovalsSection.tsx`). The buttons trigger server actions seamlessly with inline loading states, allowing admins to clear their queue rapidly.
+
+---
+
+## 🤖 AI Usage Report
+
+In developing this full-stack implementation, I collaborated with **Google Deepmind's Antigravity (AGY)** AI assistant. 
+
+### Tools Used
+- **Antigravity IDE (AGY)**: Used as an agentic pair-programmer to scaffold out the UI layout and handle backend logic generation.
+
+### Prompts
+- Provided the comprehensive project rubric detailing the need for route groups, PostgreSQL database bindings, public marketing pages, and the authentication flow.
+
+### What AI Generated
+- Next.js 14 App Router boilerplate and route group scaffolding (`(marketing)` vs `(app)`).
+- Initial Prisma schema design (`schema.prisma`) mapping out relationships.
+- The `AutomationBackground` WebGL shader adaptation.
+
+### What Was Manually Edited & Human Judgment
+- **Design Tokens**: I had to manually restrict the AI from using generic ShadCN defaults and explicitly forced it to bind the CSS variables (`--navy`, `--accent`) to match the prototype exact visual identity.
+- **Race-Safe Provisioning**: The AI originally suggested a standard `update` call for provisioning. I manually intervened and instructed it to use a Prisma `$transaction` with status guards to prevent race conditions during concurrent admin approvals.
+- **Client-Side Hydration**: Fixed several Suspense boundary issues around `useSearchParams` in the signup flow that the AI missed, ensuring production builds wouldn't crash.
 
 ---
 
