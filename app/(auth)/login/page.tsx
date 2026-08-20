@@ -1,35 +1,29 @@
 "use client";
 
-import React, { useState, Suspense } from "react";
+import React, { useState, useEffect, useRef, Suspense } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Shield, Lock, AlertCircle, ArrowRight, UserCheck, CheckCircle2 } from "lucide-react";
+import { Shield, Lock, Mail, AlertCircle, ArrowRight, UserCheck, CheckCircle2, Sparkles } from "lucide-react";
 
 const DEMO_ACCOUNTS = [
   {
     name: "Manvi Mehta",
     email: "manvi@company.com",
-    role: "Employee (Product Team)",
-    desc: "Approver for Marketing & Zendesk, requester for Salesforce & Finance",
+    role: "Employee · Product Team",
+    desc: "Approver for Marketing & Support, requester for Salesforce",
     password: "emp123",
     tone: "#2563EB",
+    badge: "Requester & Approver",
   },
   {
     name: "Rahul Sharma",
     email: "rahul@company.com",
     role: "Board Admin & Access Provider",
-    desc: "Full administrator queue, board configuration, and Access ID governance",
+    desc: "Manual provisioning queue, board config, Access ID governance",
     password: "admin123",
-    tone: "#334155",
-  },
-  {
-    name: "Ananya Rao",
-    email: "ananya@company.com",
-    role: "Employee (Support Team)",
-    desc: "Cross-functional requester awaiting approval from Manvi",
-    password: "emp123",
-    tone: "#7C3AED",
+    tone: "#6366F1",
+    badge: "Full Admin Queue",
   },
 ];
 
@@ -43,6 +37,20 @@ function LoginForm() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [quickLoading, setQuickLoading] = useState<string | null>(null);
+
+  // Mouse position state for card spotlight effect
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [mousePos, setMousePos] = useState({ x: 200, y: 150 });
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    setMousePos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -95,142 +103,173 @@ function LoginForm() {
   };
 
   return (
-    <div className="w-full max-w-[480px]">
+    <div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="relative w-full max-w-[430px] rounded-2xl bg-[#0F172A]/75 backdrop-blur-2xl border border-white/[0.16] shadow-2xl p-8 sm:p-9 text-white overflow-hidden transition-all duration-300 animate-fadeIn"
+      style={{
+        boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.25)",
+      }}
+    >
+      {/* Dynamic Cursor Spotlight Layer */}
+      <div
+        className="pointer-events-none absolute inset-0 transition-opacity duration-300"
+        style={{
+          opacity: isHovered ? 1 : 0.35,
+          background: `radial-gradient(350px circle at ${mousePos.x}px ${mousePos.y}px, rgba(47, 111, 237, 0.18), transparent 70%)`,
+        }}
+      />
+
+      {/* Specular Edge Highlight on Top */}
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+
       {/* Brand Header */}
-      <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center w-12 h-12 rounded-[12px] bg-[var(--navy)] text-white font-bold text-lg mb-3 shadow-sm">
+      <div className="relative text-center mb-7">
+        <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-[#2F6FED] to-[#1E4FC7] text-white font-extrabold text-base mb-3 shadow-[0_0_20px_rgba(47,111,237,0.4)] border border-white/20">
           NA
         </div>
-        <h1 className="text-2xl font-extrabold text-[var(--text)] tracking-tight">
-          Access Management
+        <h1 className="text-2xl font-bold tracking-tight text-white flex items-center justify-center gap-2">
+          <span>AccessFlow</span>
         </h1>
-        <p className="text-sm text-[var(--muted)] mt-1">
-          New Age Portal &bull; Sign in to access your boards and applications
+        <p className="text-xs text-slate-300 mt-1 tracking-wide">
+          Governed enterprise access &amp; provisioning portal
         </p>
       </div>
 
-      {/* Login Card */}
-      <div className="bg-white border border-[var(--border)] rounded-[var(--radius-container)] p-8 shadow-sm">
-        {error && (
-          <div className="mb-6 p-3.5 bg-red-50 border border-red-200 rounded-[var(--radius-control)] flex items-start gap-2.5 text-xs text-red-700 font-medium">
-            <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
-            <span>{error}</span>
-          </div>
-        )}
+      {/* Error Alert */}
+      {error && (
+        <div className="mb-5 p-3 bg-red-500/15 border border-red-500/30 rounded-xl flex items-start gap-2.5 text-xs text-red-200 animate-fadeIn">
+          <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
+          <span>{error}</span>
+        </div>
+      )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="form-label">Work Email</label>
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="relative space-y-4">
+        <div>
+          <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+            Work Email
+          </label>
+          <div className="relative">
+            <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="email"
               required
-              className="text-input"
+              className="w-full h-10 pl-10 pr-3.5 rounded-lg bg-black/25 border border-white/15 text-white text-sm placeholder-slate-400 outline-none transition focus:border-[#2F6FED] focus:ring-2 focus:ring-[#2F6FED]/30 focus:bg-black/35"
               placeholder="name@company.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={isLoading || !!quickLoading}
             />
           </div>
+        </div>
 
-          <div>
-            <div className="flex items-center justify-between mb-1">
-              <label className="form-label mb-0">Password</label>
-            </div>
+        <div>
+          <div className="flex items-center justify-between mb-1.5">
+            <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300">
+              Password
+            </label>
+          </div>
+          <div className="relative">
+            <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="password"
               required
-              className="text-input"
-              placeholder="••••••••"
+              className="w-full h-10 pl-10 pr-3.5 rounded-lg bg-black/25 border border-white/15 text-white text-sm placeholder-slate-400 outline-none transition focus:border-[#2F6FED] focus:ring-2 focus:ring-[#2F6FED]/30 focus:bg-black/35"
+              placeholder="••••••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={isLoading || !!quickLoading}
             />
           </div>
-
-          <button
-            type="submit"
-            disabled={isLoading || !!quickLoading}
-            className="btn btn-primary btn-block mt-2 flex items-center justify-center gap-2"
-          >
-            {isLoading ? (
-              <span>Signing in...</span>
-            ) : (
-              <>
-                <span>Sign In</span>
-                <ArrowRight className="w-4 h-4" />
-              </>
-            )}
-          </button>
-        </form>
-
-        <div className="mt-6 text-center text-xs text-[var(--muted)]">
-          Don&apos;t have an account?{" "}
-          <Link
-            href="/signup"
-            className="text-[var(--accent)] font-semibold hover:underline"
-          >
-            Register here
-          </Link>
         </div>
+
+        <button
+          type="submit"
+          disabled={isLoading || !!quickLoading}
+          className="w-full h-10 mt-2 rounded-lg bg-gradient-to-r from-[#2F6FED] to-[#1E4FC7] hover:from-[#3B7BF6] hover:to-[#2558D4] text-white text-sm font-semibold flex items-center justify-center gap-2 shadow-[0_2px_15px_rgba(47,111,237,0.35)] transition-all duration-150 hover:shadow-[0_4px_20px_rgba(47,111,237,0.5)] active:translate-y-[1px] disabled:opacity-50"
+        >
+          {isLoading ? (
+            <span>Signing in...</span>
+          ) : (
+            <>
+              <span>Sign In</span>
+              <ArrowRight className="w-4 h-4" />
+            </>
+          )}
+        </button>
+      </form>
+
+      {/* Secondary Signup Link */}
+      <div className="relative mt-5 text-center text-xs text-slate-300">
+        Don&apos;t have an account?{" "}
+        <Link
+          href="/signup"
+          className="text-[#60A5FA] font-semibold hover:underline hover:text-white transition"
+        >
+          Register here
+        </Link>
       </div>
 
-      {/* Demo Quick Logins (Evaluator Convenience - Gated in Production) */}
+      {/* Evaluator 1-Click Demo Switcher */}
       {(process.env.NEXT_PUBLIC_ENABLE_DEMO_ACCOUNTS === "true" ||
         process.env.NODE_ENV !== "production") && (
-        <div className="mt-8">
-          <div className="flex items-center gap-2 mb-3">
-            <UserCheck className="w-4 h-4 text-[var(--muted-2)]" />
-            <span className="text-xs font-bold uppercase tracking-wider text-[var(--muted-2)]">
+        <div className="relative mt-7 pt-6 border-t border-white/10">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-[#60A5FA]" />
               1-Click Demo Accounts
             </span>
+            <span className="text-[10.5px] text-slate-300">Evaluator mode</span>
           </div>
 
-        <div className="space-y-2.5">
-          {DEMO_ACCOUNTS.map((acc) => (
-            <button
-              key={acc.email}
-              type="button"
-              onClick={() => handleQuickLogin(acc)}
-              disabled={isLoading || !!quickLoading}
-              className="w-full text-left p-3.5 bg-white hover:bg-slate-50 border border-[var(--border)] hover:border-slate-300 rounded-[10px] transition flex items-center justify-between gap-3 shadow-xs"
-            >
-              <div className="flex items-center gap-3 min-w-0">
-                <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
-                  style={{ backgroundColor: acc.tone }}
-                >
-                  {acc.name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .slice(0, 2)
-                    .join("")}
-                </div>
-                <div className="min-w-0">
-                  <div className="text-xs font-bold text-gray-900 flex items-center gap-2">
-                    <span>{acc.name}</span>
-                    <span className="text-[10.5px] font-normal text-gray-500">
-                      &bull; {acc.role}
-                    </span>
+          <div className="space-y-2">
+            {DEMO_ACCOUNTS.map((acc) => (
+              <button
+                key={acc.email}
+                type="button"
+                onClick={() => handleQuickLogin(acc)}
+                disabled={isLoading || !!quickLoading}
+                className="w-full text-left p-3 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.12] hover:border-white/25 transition-all duration-150 flex items-center justify-between gap-3 group shadow-xs active:translate-y-[1px]"
+              >
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div
+                    className="w-7 h-7 rounded-full flex items-center justify-center text-white text-[11px] font-bold flex-shrink-0 shadow-xs"
+                    style={{ backgroundColor: acc.tone }}
+                  >
+                    {acc.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")}
                   </div>
-                  <div className="text-[11px] text-gray-500 truncate mt-0.5">
-                    {acc.desc}
+                  <div className="min-w-0">
+                    <div className="text-[13px] font-bold text-white group-hover:text-white flex items-center gap-1.5">
+                      <span>{acc.name}</span>
+                      <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-white/10 text-slate-300 font-normal">
+                        {acc.badge}
+                      </span>
+                    </div>
+                    <div className="text-[11px] text-slate-300 truncate">
+                      {acc.role}
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="flex-shrink-0 text-xs font-semibold text-[var(--accent)]">
-                {quickLoading === acc.email ? (
-                  "Loading..."
-                ) : (
-                  <span className="flex items-center gap-1">
-                    Login <ArrowRight className="w-3.5 h-3.5" />
-                  </span>
-                )}
-              </div>
-            </button>
-          ))}
+                <div className="text-xs font-semibold text-[#60A5FA] group-hover:translate-x-0.5 transition-transform flex-shrink-0">
+                  {quickLoading === acc.email ? (
+                    <span className="text-slate-300 text-[11px]">Loading...</span>
+                  ) : (
+                    <span className="flex items-center gap-1">
+                      Login <ArrowRight className="w-3 h-3" />
+                    </span>
+                  )}
+                </div>
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
       )}
     </div>
   );
@@ -238,14 +277,34 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen bg-[var(--bg)] flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8">
-      <Suspense
-        fallback={
-          <div className="text-center text-sm text-gray-500">Loading sign in...</div>
-        }
-      >
-        <LoginForm />
-      </Suspense>
+    <div className="min-h-screen relative flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8 bg-[#0B1220] overflow-hidden">
+      {/* Background Ambient Orbs */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden z-0">
+        <div className="absolute -top-[20%] -left-[10%] w-[55vw] h-[55vw] rounded-full bg-gradient-to-br from-[#2F6FED]/20 to-[#4F46E5]/15 filter blur-[140px] animate-auroraSlow" />
+        <div className="absolute top-[40%] -right-[15%] w-[50vw] h-[50vw] rounded-full bg-gradient-to-bl from-[#0284C7]/20 to-[#2F6FED]/15 filter blur-[150px] animate-auroraReverse" />
+        <div className="absolute -bottom-[20%] left-[25%] w-[60vw] h-[60vw] rounded-full bg-gradient-to-tr from-[#6366F1]/15 to-[#3B82F6]/10 filter blur-[160px] animate-auroraSlow" />
+
+        {/* Subtle Fine Grid Texture */}
+        <div
+          className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.15) 1px, transparent 1px)`,
+            backgroundSize: "32px 32px",
+          }}
+        />
+      </div>
+
+      <div className="relative z-10 w-full flex justify-center">
+        <Suspense
+          fallback={
+            <div className="text-center text-sm text-slate-400">
+              Loading AccessFlow...
+            </div>
+          }
+        >
+          <LoginForm />
+        </Suspense>
+      </div>
     </div>
   );
 }

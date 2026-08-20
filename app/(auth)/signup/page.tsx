@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
-import { AlertCircle, ArrowRight, CheckCircle2 } from "lucide-react";
+import { AlertCircle, ArrowRight, User, Mail, Lock, Building, ShieldCheck, Briefcase } from "lucide-react";
 
 const DEPARTMENTS = [
   "Product Team",
@@ -28,6 +28,20 @@ export default function SignupPage() {
 
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Mouse position state for card spotlight effect
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [mousePos, setMousePos] = useState({ x: 220, y: 180 });
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    setMousePos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,82 +90,135 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--bg)] flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-[480px]">
-        {/* Brand Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-[12px] bg-[var(--navy)] text-white font-bold text-lg mb-3 shadow-sm">
-            NA
-          </div>
-          <h1 className="text-2xl font-extrabold text-[var(--text)] tracking-tight">
-            Create an Account
-          </h1>
-          <p className="text-sm text-[var(--muted)] mt-1">
-            Join the New Age Access Management portal
-          </p>
-        </div>
+    <div className="min-h-screen relative flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8 bg-[#0B1220] overflow-hidden">
+      {/* Background Ambient Orbs */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden z-0">
+        <div className="absolute -top-[20%] -left-[10%] w-[55vw] h-[55vw] rounded-full bg-gradient-to-br from-[#2F6FED]/20 to-[#4F46E5]/15 filter blur-[140px] animate-auroraSlow" />
+        <div className="absolute top-[40%] -right-[15%] w-[50vw] h-[50vw] rounded-full bg-gradient-to-bl from-[#0284C7]/20 to-[#2F6FED]/15 filter blur-[150px] animate-auroraReverse" />
+        <div className="absolute -bottom-[20%] left-[25%] w-[60vw] h-[60vw] rounded-full bg-gradient-to-tr from-[#6366F1]/15 to-[#3B82F6]/10 filter blur-[160px] animate-auroraSlow" />
 
-        {/* Signup Card */}
-        <div className="bg-white border border-[var(--border)] rounded-[var(--radius-container)] p-8 shadow-sm">
+        {/* Subtle Fine Grid Texture */}
+        <div
+          className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.15) 1px, transparent 1px)`,
+            backgroundSize: "32px 32px",
+          }}
+        />
+      </div>
+
+      <div className="relative z-10 w-full flex justify-center">
+        <div
+          ref={cardRef}
+          onMouseMove={handleMouseMove}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          className="relative w-full max-w-[460px] rounded-2xl bg-[#0F172A]/75 backdrop-blur-2xl border border-white/[0.16] shadow-2xl p-8 sm:p-9 text-white overflow-hidden transition-all duration-300 animate-fadeIn"
+          style={{
+            boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.25)",
+          }}
+        >
+          {/* Dynamic Cursor Spotlight Layer */}
+          <div
+            className="pointer-events-none absolute inset-0 transition-opacity duration-300"
+            style={{
+              opacity: isHovered ? 1 : 0.35,
+              background: `radial-gradient(350px circle at ${mousePos.x}px ${mousePos.y}px, rgba(47, 111, 237, 0.18), transparent 70%)`,
+            }}
+          />
+
+          {/* Specular Edge Highlight on Top */}
+          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+
+          {/* Brand Header */}
+          <div className="relative text-center mb-6">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-[#2F6FED] to-[#1E4FC7] text-white font-extrabold text-base mb-3 shadow-[0_0_20px_rgba(47,111,237,0.4)] border border-white/20">
+              NA
+            </div>
+            <h1 className="text-2xl font-bold tracking-tight text-white">
+              Create an Account
+            </h1>
+            <p className="text-xs text-slate-300 mt-1">
+              Join the AccessFlow Enterprise Portal
+            </p>
+          </div>
+
           {error && (
-            <div className="mb-6 p-3.5 bg-red-50 border border-red-200 rounded-[var(--radius-control)] flex items-start gap-2.5 text-xs text-red-700 font-medium">
-              <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
+            <div className="mb-5 p-3 bg-red-500/15 border border-red-500/30 rounded-xl flex items-start gap-2.5 text-xs text-red-200 animate-fadeIn">
+              <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
               <span>{error}</span>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="relative space-y-3.5">
             <div>
-              <label className="form-label">Full Name</label>
-              <input
-                type="text"
-                required
-                className="text-input"
-                placeholder="e.g. Maya Lin"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                disabled={isLoading}
-              />
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">
+                Full Name
+              </label>
+              <div className="relative">
+                <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <input
+                  type="text"
+                  required
+                  className="w-full h-10 pl-10 pr-3.5 rounded-lg bg-black/25 border border-white/15 text-white text-sm placeholder-slate-400 outline-none transition focus:border-[#2F6FED] focus:ring-2 focus:ring-[#2F6FED]/30"
+                  placeholder="e.g. Maya Lin"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  disabled={isLoading}
+                />
+              </div>
             </div>
 
             <div>
-              <label className="form-label">Work Email</label>
-              <input
-                type="email"
-                required
-                className="text-input"
-                placeholder="maya@company.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={isLoading}
-              />
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">
+                Work Email
+              </label>
+              <div className="relative">
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <input
+                  type="email"
+                  required
+                  className="w-full h-10 pl-10 pr-3.5 rounded-lg bg-black/25 border border-white/15 text-white text-sm placeholder-slate-400 outline-none transition focus:border-[#2F6FED] focus:ring-2 focus:ring-[#2F6FED]/30"
+                  placeholder="maya@company.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={isLoading}
+                />
+              </div>
             </div>
 
             <div>
-              <label className="form-label">Password</label>
-              <input
-                type="password"
-                required
-                minLength={6}
-                className="text-input"
-                placeholder="At least 6 characters"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={isLoading}
-              />
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <input
+                  type="password"
+                  required
+                  minLength={6}
+                  className="w-full h-10 pl-10 pr-3.5 rounded-lg bg-black/25 border border-white/15 text-white text-sm placeholder-slate-400 outline-none transition focus:border-[#2F6FED] focus:ring-2 focus:ring-[#2F6FED]/30"
+                  placeholder="At least 6 characters"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={isLoading}
+                />
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="form-label">Department / Group</label>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">
+                  Department
+                </label>
                 <select
-                  className="text-input"
+                  className="w-full h-10 px-3 rounded-lg bg-black/25 border border-white/15 text-white text-xs outline-none transition focus:border-[#2F6FED] focus:ring-2 focus:ring-[#2F6FED]/30"
                   value={group}
                   onChange={(e) => setGroup(e.target.value)}
                   disabled={isLoading}
                 >
                   {DEPARTMENTS.map((dept) => (
-                    <option key={dept} value={dept}>
+                    <option key={dept} value={dept} className="bg-slate-900 text-white">
                       {dept}
                     </option>
                   ))}
@@ -159,35 +226,42 @@ export default function SignupPage() {
               </div>
 
               <div>
-                <label className="form-label">Persona Role</label>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">
+                  Role
+                </label>
                 <select
-                  className="text-input"
+                  className="w-full h-10 px-3 rounded-lg bg-black/25 border border-white/15 text-white text-xs outline-none transition focus:border-[#2F6FED] focus:ring-2 focus:ring-[#2F6FED]/30"
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
                   disabled={isLoading}
                 >
-                  <option value="EMPLOYEE">Employee</option>
-                  <option value="BOARD_ADMIN">Board Admin</option>
+                  <option value="EMPLOYEE" className="bg-slate-900 text-white">Employee</option>
+                  <option value="BOARD_ADMIN" className="bg-slate-900 text-white">Board Admin</option>
                 </select>
               </div>
             </div>
 
             <div>
-              <label className="form-label">Job Title (Optional)</label>
-              <input
-                type="text"
-                className="text-input"
-                placeholder="e.g. Senior Product Designer"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                disabled={isLoading}
-              />
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">
+                Job Title (Optional)
+              </label>
+              <div className="relative">
+                <Briefcase className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <input
+                  type="text"
+                  className="w-full h-10 pl-10 pr-3.5 rounded-lg bg-black/25 border border-white/15 text-white text-sm placeholder-slate-400 outline-none transition focus:border-[#2F6FED] focus:ring-2 focus:ring-[#2F6FED]/30"
+                  placeholder="e.g. Senior Product Designer"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  disabled={isLoading}
+                />
+              </div>
             </div>
 
             <button
               type="submit"
               disabled={isLoading}
-              className="btn btn-primary btn-block mt-4 flex items-center justify-center gap-2"
+              className="w-full h-10 mt-3 rounded-lg bg-gradient-to-r from-[#2F6FED] to-[#1E4FC7] hover:from-[#3B7BF6] hover:to-[#2558D4] text-white text-sm font-semibold flex items-center justify-center gap-2 shadow-[0_2px_15px_rgba(47,111,237,0.35)] transition-all duration-150 hover:shadow-[0_4px_20px_rgba(47,111,237,0.5)] active:translate-y-[1px] disabled:opacity-50"
             >
               {isLoading ? (
                 <span>Creating Account...</span>
@@ -200,11 +274,11 @@ export default function SignupPage() {
             </button>
           </form>
 
-          <div className="mt-6 text-center text-xs text-[var(--muted)]">
+          <div className="relative mt-5 text-center text-xs text-slate-300">
             Already have an account?{" "}
             <Link
               href="/login"
-              className="text-[var(--accent)] font-semibold hover:underline"
+              className="text-[#60A5FA] font-semibold hover:underline hover:text-white transition"
             >
               Sign in
             </Link>
