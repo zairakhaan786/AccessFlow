@@ -1,4 +1,5 @@
 "use client";
+import { formatClientDate } from "@/lib/utils";
 
 import React from "react";
 import DrawerShell from "./DrawerShell";
@@ -33,17 +34,9 @@ export default function RequestDetailDrawer({
     parsedTimeline = [];
   }
 
-  const submittedDate = new Date(request.submittedAt).toLocaleDateString("en-US", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
+  const submittedDate = formatClientDate(request.submittedAt);
 
-  const updatedDate = new Date(request.updatedAt).toLocaleDateString("en-US", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
+  const updatedDate = formatClientDate(request.updatedAt);
 
   return (
     <DrawerShell

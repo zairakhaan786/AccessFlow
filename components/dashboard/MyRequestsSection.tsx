@@ -1,4 +1,5 @@
 "use client";
+import { formatClientDate } from "@/lib/utils";
 
 import React from "react";
 import { ClipboardList, Inbox } from "lucide-react";
@@ -78,11 +79,7 @@ export default function MyRequestsSection({
       ) : (
         <div className="flex flex-col gap-2">
           {myRequests.map((r) => {
-            const updatedDate = new Date(r.updatedAt).toLocaleDateString("en-US", {
-              day: "numeric",
-              month: "short",
-              year: "numeric",
-            });
+            const updatedDate = formatClientDate(r.updatedAt);
 
             return (
               <div

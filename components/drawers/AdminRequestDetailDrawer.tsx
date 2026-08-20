@@ -1,4 +1,5 @@
 "use client";
+import { formatClientDate } from "@/lib/utils";
 
 import React, { useState } from "react";
 import DrawerShell from "./DrawerShell";
@@ -29,11 +30,7 @@ export default function AdminRequestDetailDrawer({
     parsedTimeline = [];
   }
 
-  const submittedDate = new Date(request.submittedAt).toLocaleDateString("en-US", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
+  const submittedDate = formatClientDate(request.submittedAt);
 
   const handleProvision = async () => {
     setIsProvisioning(true);

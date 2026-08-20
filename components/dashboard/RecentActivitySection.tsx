@@ -1,4 +1,5 @@
 "use client";
+import { formatClientDate } from "@/lib/utils";
 
 import React from "react";
 import { History } from "lucide-react";
@@ -46,13 +47,7 @@ export default function RecentActivitySection({ logs }: RecentActivitySectionPro
             const formattedDate =
               typeof a.timestamp === "string"
                 ? a.timestamp
-                : new Date(a.timestamp).toLocaleDateString("en-US", {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                    hour: "numeric",
-                    minute: "2-digit",
-                  });
+                : formatClientDate(a.timestamp);
 
             return (
               <div

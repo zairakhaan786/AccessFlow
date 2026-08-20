@@ -1,4 +1,5 @@
 "use client";
+import { formatClientDate } from "@/lib/utils";
 
 import React, { useState, useRef, useEffect } from "react";
 import { signOut, signIn } from "next-auth/react";
@@ -189,12 +190,7 @@ export default function Header({
                               <span className="text-[10.5px] text-[#9CA3AF]">
                                 {typeof n.createdAt === "string"
                                   ? n.createdAt
-                                  : new Date(n.createdAt).toLocaleDateString("en-US", {
-                                      day: "numeric",
-                                      month: "short",
-                                      hour: "numeric",
-                                      minute: "2-digit",
-                                    })}
+                                  : formatClientDate(n.createdAt)}
                               </span>
                               <span className="text-[9.5px] font-bold text-[#9CA3AF] flex items-center gap-1">
                                 {n.channel === "slack" ? (

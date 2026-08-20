@@ -1,4 +1,5 @@
 "use client";
+import { formatClientDate } from "@/lib/utils";
 
 import React from "react";
 import { ClipboardCheck, ChevronRight } from "lucide-react";
@@ -47,11 +48,7 @@ export default function ApprovalsSection({
 
       <div className="flex flex-col gap-2">
         {pendingApprovals.map((r) => {
-          const submittedDate = new Date(r.submittedAt).toLocaleDateString("en-US", {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-          });
+          const submittedDate = formatClientDate(r.submittedAt);
 
           const initials = r.requesterName
             .split(" ")

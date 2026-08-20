@@ -1,4 +1,5 @@
 "use client";
+import { formatClientDate } from "@/lib/utils";
 
 import React, { useState } from "react";
 import DrawerShell from "./DrawerShell";
@@ -33,11 +34,7 @@ export default function ApprovalDetailDrawer({
     parsedTimeline = [];
   }
 
-  const submittedDate = new Date(request.submittedAt).toLocaleDateString("en-US", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
+  const submittedDate = formatClientDate(request.submittedAt);
 
   const isPendingApproval =
     request.status === "Pending Approval" ||
