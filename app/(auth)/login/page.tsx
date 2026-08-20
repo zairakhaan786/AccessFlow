@@ -158,6 +158,9 @@ function LoginForm() {
             <label htmlFor="login-password" className="block text-[11px] font-bold uppercase tracking-wider text-slate-300">
               Password
             </label>
+            <Link href="/forgot-password" onClick={(e) => e.preventDefault()} className="text-[11px] font-semibold text-[#60A5FA] hover:text-white hover:underline transition">
+              Forgot password?
+            </Link>
           </div>
           <div className="relative">
             <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
