@@ -66,7 +66,7 @@ export default function Header({
 
     await signIn("credentials", {
       redirect: true,
-      callbackUrl: "/",
+      callbackUrl: "/dashboard",
       email,
       password,
     });

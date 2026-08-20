@@ -39,9 +39,12 @@ export default function AboutPage() {
         ></iframe>
       </div>
 
-      {/* Narrative */}
+      {/* Narrative & Assessment Info */}
       <div className="prose prose-slate max-w-none text-[15px] leading-relaxed text-[var(--text)] bg-white p-8 md:p-12 rounded-2xl border border-[var(--border)] shadow-sm">
-        <h2 className="text-xl font-bold text-[var(--navy)] mb-4">The Origin Story</h2>
+        
+        {/* My Approach */}
+        <h2 className="text-xl font-bold text-[var(--navy)] mb-4">My Approach</h2>
+        <h3 className="text-[17px] font-bold text-[var(--navy)] mt-6 mb-2">The Origin Story</h3>
         <p className="mb-6">
           I built AccessFlow as a comprehensive solution to a common enterprise problem: the chaotic, untrackable process of requesting and approving tool access. In many organizations, this happens over Slack or email, leaving no audit trail and creating massive compliance headaches.
         </p>
@@ -50,16 +53,92 @@ export default function AboutPage() {
           This project originated as a technical assessment where I was tasked with converting a static UI prototype into a fully functional, full-stack application. My goal was to retain the strict aesthetic requirements of the original glassmorphic design while building a robust, production-ready backend.
         </p>
 
-        <h2 className="text-xl font-bold text-[var(--navy)] mb-4 mt-8">Technical Approach</h2>
+        <h3 className="text-[17px] font-bold text-[var(--navy)] mt-8 mb-2">Technical Execution</h3>
         <p className="mb-6">
           Under the hood, AccessFlow is powered by Next.js App Router and a PostgreSQL database managed via Prisma. I implemented NextAuth for secure credential-based authentication, and utilized a strictly typed schema to handle complex relationships between users, groups, access items, and audit logs. 
         </p>
 
-        <p className="mb-8">
+        <p className="mb-10">
           The result is a platform that not only looks beautiful but functions as a true multi-tenant governance tool, complete with automated provisioning queues and exception handling workflows.
         </p>
 
-        <div className="flex justify-center border-t border-[var(--border)] pt-8">
+        {/* Submission & Assessment */}
+        <hr className="my-10 border-[var(--border)]" />
+        <h2 className="text-xl font-bold text-[var(--navy)] mb-6">Submission & Assessment</h2>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+          <div>
+            <h3 className="text-[16px] font-bold text-[var(--navy)] mb-3">Assessment Deliverables</h3>
+            <ul className="space-y-3">
+              <li className="flex items-start">
+                <span className="text-[var(--accent)] mr-2 mt-0.5">✓</span>
+                <div>
+                  <strong>Deployed Application</strong><br />
+                  <a href="#" className="text-sm text-[var(--accent)] hover:underline">[Deployment Link Placeholder]</a>
+                </div>
+              </li>
+              <li className="flex items-start">
+                <span className="text-[var(--accent)] mr-2 mt-0.5">✓</span>
+                <div>
+                  <strong>GitHub Repository</strong><br />
+                  <a href="#" className="text-sm text-[var(--accent)] hover:underline">[GitHub Link Placeholder]</a>
+                </div>
+              </li>
+              <li className="flex items-start">
+                <span className="text-[var(--accent)] mr-2 mt-0.5">✓</span>
+                <div>
+                  <strong>Part 4 Improvement Report</strong><br />
+                  <span className="text-sm text-[var(--muted)]">Added atomic Database Transactions for race-safe manual provisioning, and Inline Quick-Approvals for Board Admins to reduce click-fatigue.</span>
+                </div>
+              </li>
+              <li className="flex items-start">
+                <span className="text-[var(--accent)] mr-2 mt-0.5">✓</span>
+                <div>
+                  <strong>AI Usage Documentation</strong><br />
+                  <span className="text-sm text-[var(--muted)]">Fully documented in the repository README.</span>
+                </div>
+              </li>
+              <li className="flex items-start">
+                <span className="text-[var(--accent)] mr-2 mt-0.5">✓</span>
+                <div>
+                  <strong>Loom Walkthrough</strong><br />
+                  <a href="#" className="text-sm text-[var(--accent)] hover:underline">[Loom Video Placeholder]</a>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-[16px] font-bold text-[var(--navy)] mb-3">What I Built</h3>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-sm text-[var(--text)]">
+              <li className="flex items-center"><span className="text-[var(--accent)] mr-2">✓</span> Authentication</li>
+              <li className="flex items-center"><span className="text-[var(--accent)] mr-2">✓</span> Access Directory</li>
+              <li className="flex items-center"><span className="text-[var(--accent)] mr-2">✓</span> Access Requests</li>
+              <li className="flex items-center"><span className="text-[var(--accent)] mr-2">✓</span> Request on behalf</li>
+              <li className="flex items-center"><span className="text-[var(--accent)] mr-2">✓</span> Approval workflow</li>
+              <li className="flex items-center"><span className="text-[var(--accent)] mr-2">✓</span> Automated provisioning</li>
+              <li className="flex items-center"><span className="text-[var(--accent)] mr-2">✓</span> Manual provisioning</li>
+              <li className="flex items-center"><span className="text-[var(--accent)] mr-2">✓</span> Request tracking</li>
+              <li className="flex items-center"><span className="text-[var(--accent)] mr-2">✓</span> Persistent database</li>
+              <li className="flex items-center"><span className="text-[var(--accent)] mr-2">✓</span> Role-based access</li>
+              <li className="flex items-center"><span className="text-[var(--accent)] mr-2">✓</span> Responsive UI/UX</li>
+              <li className="flex items-center"><span className="text-[var(--accent)] mr-2">✓</span> Part 4 improvements</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Technologies Used */}
+        <hr className="my-10 border-[var(--border)]" />
+        <h2 className="text-xl font-bold text-[var(--navy)] mb-6">Technologies Used</h2>
+        <div className="flex flex-wrap gap-2 mb-8">
+          {["Next.js 14", "TypeScript", "Tailwind CSS", "Prisma ORM", "PostgreSQL", "NextAuth.js", "Zod", "Vitest"].map((tech) => (
+            <span key={tech} className="px-3 py-1 bg-slate-100 border border-slate-200 text-slate-700 text-sm font-medium rounded-full">
+              {tech}
+            </span>
+          ))}
+        </div>
+
+        <div className="flex justify-center border-t border-[var(--border)] pt-8 mt-4">
           <Link
             href="/projects"
             className="inline-flex items-center text-[var(--accent)] font-semibold hover:text-[var(--accent-dark)] transition-colors"
