@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Header from "@/components/layout/Header";
+import AutomationBackground from "@/components/auth/AutomationBackground";
 import SearchSection, { AccessCatalogItem } from "./SearchSection";
 import MyRequestsSection, { RequestItem } from "./MyRequestsSection";
 import ApprovalsSection from "./ApprovalsSection";
@@ -93,12 +94,18 @@ export default function MainDashboard({
   );
 
   return (
-    <div className="min-h-screen bg-[var(--bg)]">
-      <Header
-        currentUser={currentUser}
-        notifications={notifications}
-        allDemoUsers={allDemoUsers}
-      />
+    <div className="min-h-screen bg-[var(--bg)] relative overflow-hidden">
+      {/* Subtle background accent at 5% opacity behind dashboard */}
+      <div className="fixed inset-0 z-0 opacity-5 pointer-events-none">
+        <AutomationBackground />
+      </div>
+
+      <div className="relative z-10 flex flex-col min-h-screen">
+        <Header
+          currentUser={currentUser}
+          notifications={notifications}
+          allDemoUsers={allDemoUsers}
+        />
 
       <main className="w-[92%] max-w-[1800px] mx-auto py-6 pb-14 flex flex-col gap-4">
         {/* Welcome Greeting */}
@@ -309,6 +316,7 @@ export default function MainDashboard({
 
       {/* Toasts */}
       <ToastContainer />
+      </div>
     </div>
   );
 }

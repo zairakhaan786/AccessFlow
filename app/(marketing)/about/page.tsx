@@ -1,21 +1,28 @@
 import React from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import AutomationBackground from "@/components/auth/AutomationBackground";
 
 export default function AboutPage() {
   return (
-    <div className="flex-1 w-full max-w-4xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
-      <div className="text-center mb-12">
-        <h1 className="text-3xl md:text-4xl font-extrabold text-[var(--navy)] tracking-tight">
-          About AccessFlow
-        </h1>
-        <p className="mt-4 text-lg text-[var(--muted)]">
-          A deep dive into how I built this platform.
-        </p>
+    <div className="flex-1 w-full bg-[#F5F6F8]">
+      {/* Hero Section with Automation Background */}
+      <div className="relative w-full overflow-hidden bg-[#0F1B33] py-20 px-4 sm:px-6 lg:px-8 border-b border-[var(--border)]">
+        <AutomationBackground />
+        
+        <div className="relative z-10 text-center max-w-4xl mx-auto">
+          <h1 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight">
+            About AccessFlow
+          </h1>
+          <p className="mt-4 text-lg text-slate-300 max-w-2xl mx-auto">
+            A deep dive into how I built this platform.
+          </p>
+        </div>
       </div>
 
-      {/* Video Walkthrough Placeholder */}
-      <div className="w-full aspect-video rounded-2xl overflow-hidden bg-slate-100 border border-[var(--border)] shadow-lg mb-12 relative">
+      <div className="w-full max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8 -mt-8 relative z-20">
+        {/* Video Walkthrough Placeholder */}
+        <div className="w-full aspect-video rounded-2xl overflow-hidden bg-white border border-[var(--border)] shadow-xl mb-12 relative">
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-slate-800 text-white">
           <svg className="w-16 h-16 mb-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
@@ -147,6 +154,7 @@ export default function AboutPage() {
           </Link>
         </div>
       </div>
+    </div>
     </div>
   );
 }
