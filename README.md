@@ -4,6 +4,14 @@ I built this application to convert the static `access-management.html` prototyp
 
 ---
 
+> [!WARNING]
+> **Vercel Deployment Error?** 
+> If you deployed to Vercel and are seeing `"Database not initialized"` or `"DATABASE_URL is missing"` errors when trying to register/login, it is because **Vercel is a Serverless environment that cannot run local SQLite files**. 
+> 
+> To fix this and make the live app work, you **must** provision a PostgreSQL database (like Neon or Supabase) and configure it in your Vercel Environment Variables. See the **[Production Deployment](#-production-deployment-vercel--neon--supabase)** section at the bottom of this README for the exact 3-step instructions!
+
+---
+
 ## 🚀 Quick Start (Local Dev)
 
 To get the app running locally in one command:
