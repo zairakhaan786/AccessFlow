@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useRef } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, useRef, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { AlertCircle, ArrowRight, User, Mail, Lock, Building, ShieldCheck, Briefcase } from "lucide-react";
@@ -17,8 +17,9 @@ const DEPARTMENTS = [
   "IT Support",
 ];
 
-export default function SignupPage() {
+function SignupForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -72,6 +73,7 @@ export default function SignupPage() {
       }
 
       // Auto sign-in after registration
+      const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
       const loginRes = await signIn("credentials", {
         redirect: false,
         email,
@@ -91,11 +93,6 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen relative flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8 bg-[#0F1B33] overflow-hidden">
-      {/* Automation / Robotics Shader Background */}
-      <AutomationBackground />
-
-      <div className="relative z-10 w-full flex justify-center">
         <div
           ref={cardRef}
           onMouseMove={handleMouseMove}
@@ -272,6 +269,25 @@ export default function SignupPage() {
             </Link>
           </div>
         </div>
+  );
+}
+
+export default function SignupPage() {
+  return (
+    <div className="min-h-screen relative flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8 bg-[#0F1B33] overflow-hidden">
+      {/* Automation / Robotics Shader Background */}
+      <AutomationBackground />
+
+      <div className="relative z-10 w-full flex justify-center">
+        <Suspense
+          fallback={
+            <div className="text-center text-sm text-slate-400">
+              Loading...
+            </div>
+          }
+        >
+          <SignupForm />
+        </Suspense>
       </div>
     </div>
   );
