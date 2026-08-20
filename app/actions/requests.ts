@@ -197,6 +197,16 @@ export async function updateBoardConfigAction(formData: {
   return { success: true };
 }
 
+export async function deleteAuditLogAction(formData: { logId: string }) {
+  await getAuthenticatedUser();
+  await prisma.auditLog.delete({
+    where: { id: formData.logId },
+  });
+
+  revalidatePath("/");
+  return { success: true };
+}
+
 export async function markNotificationsAsReadAction(role: string) {
   const user = await getAuthenticatedUser();
   await prisma.notification.updateMany({

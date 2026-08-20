@@ -55,7 +55,7 @@ export default function RequestDetailDrawer({
           <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
             Requester
           </label>
-          <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+          <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
             {request.requesterName}
           </div>
         </div>
@@ -64,7 +64,7 @@ export default function RequestDetailDrawer({
           <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
             Beneficiary
           </label>
-          <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+          <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
             {request.beneficiaryName}
           </div>
         </div>
@@ -73,7 +73,7 @@ export default function RequestDetailDrawer({
           <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
             Approver
           </label>
-          <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+          <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
             {request.approverName}
           </div>
         </div>
@@ -82,7 +82,7 @@ export default function RequestDetailDrawer({
           <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
             Access provider
           </label>
-          <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+          <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
             {request.providerName}
           </div>
         </div>
@@ -91,7 +91,7 @@ export default function RequestDetailDrawer({
           <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
             Submitted
           </label>
-          <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+          <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
             {submittedDate}
           </div>
         </div>
@@ -100,19 +100,19 @@ export default function RequestDetailDrawer({
           <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
             Last updated
           </label>
-          <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+          <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
             {updatedDate}
           </div>
         </div>
       </div>
 
       {request.isException && (
-        <div className="field-grid grid grid-cols-3 gap-4 mt-4.5 pt-4 border-t border-[var(--border)]">
+        <div className="field-grid grid grid-cols-3 gap-4 mt-4.5 pt-4 border-t border-white/10">
           <div className="field">
             <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
               Reason
             </label>
-            <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+            <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
               {request.reason || "—"}
             </div>
           </div>
@@ -120,7 +120,7 @@ export default function RequestDetailDrawer({
             <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
               Required until
             </label>
-            <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+            <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
               {request.requiredUntil || "—"}
             </div>
           </div>
@@ -128,7 +128,7 @@ export default function RequestDetailDrawer({
             <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
               Urgency
             </label>
-            <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+            <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
               {request.urgency || "—"}
             </div>
           </div>
@@ -136,17 +136,17 @@ export default function RequestDetailDrawer({
       )}
 
       {request.justification && (
-        <div className="mt-6 pt-5 border-t border-[var(--border)]">
+        <div className="mt-6 pt-5 border-t border-white/10">
           <div className="divider-label text-[11.5px] font-bold uppercase tracking-wider text-[var(--muted-2)] mb-2">
             Business Justification
           </div>
-          <div className="text-[13.5px] text-[#374151] leading-relaxed">
+          <div className="text-[13.5px] text-[#CBD5E1] leading-relaxed">
             {request.justification}
           </div>
         </div>
       )}
 
-      <div className="mt-6 pt-5 border-t border-[var(--border)]">
+      <div className="mt-6 pt-5 border-t border-white/10">
         <div className="divider-label text-[11.5px] font-bold uppercase tracking-wider text-[var(--muted-2)] mb-3">
           Timeline
         </div>
@@ -154,9 +154,9 @@ export default function RequestDetailDrawer({
       </div>
 
       {request.status === "Access Provisioned" && (
-        <div className="mt-6 bg-[#F0FDFA] border border-[#99F6E4] rounded-[9px] p-4">
-          <div className="text-[13.5px] font-bold text-[#0F766E]">Access Provisioned</div>
-          <div className="text-[12px] text-[#0D6E68] mt-1">
+        <div className="mt-6 bg-[#14B8A6]/10 border border-[#14B8A6]/30 rounded-[9px] p-4">
+          <div className="text-[13.5px] font-bold text-[#5EEAD4]">Access Provisioned</div>
+          <div className="text-[12px] text-[#99F6E4] mt-1">
             {request.onBehalf
               ? `${request.beneficiaryName} has been granted access. Since this was raised on their behalf, you can close it without waiting on them.`
               : "Access has been granted."}

@@ -58,11 +58,11 @@ export default function AccessDetailsDrawer({
       title={accessItem.name}
       subtitle={`${accessItem.tool} · ${accessItem.category}`}
     >
-      <p className="text-[13.5px] text-[#6B7280] leading-relaxed">
+      <p className="text-[13.5px] text-[#94A3B8] leading-relaxed">
         {accessItem.description}
       </p>
 
-      <div className="mt-6 pt-5 border-t border-[var(--border)]">
+      <div className="mt-6 pt-5 border-t border-white/10">
         <div className="divider-label text-[11.5px] font-bold uppercase tracking-wider text-[var(--muted-2)] mb-3">
           Access Details
         </div>
@@ -72,11 +72,11 @@ export default function AccessDetailsDrawer({
             <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
               Access ID
             </label>
-            <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+            <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
               {accessItem.accessId ? (
                 <span className="font-mono">{accessItem.accessId}</span>
               ) : (
-                <span className="text-[#D97706]">Not available</span>
+                <span className="text-[#F59E0B]">Not available</span>
               )}
             </div>
           </div>
@@ -85,7 +85,7 @@ export default function AccessDetailsDrawer({
             <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
               Request type
             </label>
-            <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+            <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
               {accessItem.requestType}
             </div>
           </div>
@@ -94,7 +94,7 @@ export default function AccessDetailsDrawer({
             <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
               Eligibility group
             </label>
-            <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+            <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
               {accessItem.group}
             </div>
           </div>
@@ -103,7 +103,7 @@ export default function AccessDetailsDrawer({
             <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
               Board / account creator
             </label>
-            <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+            <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
               {accessItem.creator}
             </div>
           </div>
@@ -112,7 +112,7 @@ export default function AccessDetailsDrawer({
             <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
               Approver
             </label>
-            <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+            <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
               {accessItem.approverName}
             </div>
           </div>
@@ -121,7 +121,7 @@ export default function AccessDetailsDrawer({
             <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
               Backup approver
             </label>
-            <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+            <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
               {accessItem.backupApproverName}
             </div>
           </div>
@@ -130,7 +130,7 @@ export default function AccessDetailsDrawer({
             <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
               Access provider / admin
             </label>
-            <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+            <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
               {accessItem.providerName}
             </div>
           </div>
@@ -139,7 +139,7 @@ export default function AccessDetailsDrawer({
             <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
               Provisioning
             </label>
-            <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+            <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
               {accessItem.automation
                 ? "Automated on approval"
                 : "Manual, by access provider"}
@@ -148,10 +148,10 @@ export default function AccessDetailsDrawer({
         </div>
       </div>
 
-      <div className="mt-6 pt-5 border-t border-[var(--border)]">
+      <div className="mt-6 pt-5 border-t border-white/10">
         {eligible ? (
           <div>
-            <div className="success-box flex items-center gap-2 text-[13px] font-semibold text-[#15803D] bg-[#F0FDF4] border border-[#BBF7D0] rounded-[9px] p-3.5">
+            <div className="success-box flex items-center gap-2 text-[13px] font-semibold text-[#86EFAC] bg-[#22C55E]/10 border border-[#22C55E]/30 rounded-[9px] p-3.5">
               <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
               You&apos;re eligible for this access.
             </div>
@@ -187,7 +187,7 @@ export default function AccessDetailsDrawer({
                       : "Request Access ID Creation"}
                   </button>
                 )}
-                <p className="text-[11.5px] text-[#9CA3AF] mt-2.5 text-center">
+                <p className="text-[11.5px] text-[#64748B] mt-2.5 text-center">
                   This board doesn&apos;t have an Access ID yet. We&apos;ll route a governed
                   request to the Board Admin to create one.
                 </p>
@@ -196,28 +196,28 @@ export default function AccessDetailsDrawer({
           </div>
         ) : (
           <div>
-            <div className="warn-box flex items-start gap-2 text-[13px] text-[#374151] bg-[#F9FAFB] border border-[var(--border)] rounded-[9px] p-3.5">
-              <Lock className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+            <div className="warn-box flex items-start gap-2 text-[13px] text-[#CBD5E1] bg-white/[0.04] border border-white/10 rounded-[9px] p-3.5">
+              <Lock className="w-4 h-4 text-[#94A3B8] mt-0.5 flex-shrink-0" />
               <div>
-                <div className="font-bold text-[#374151]">
+                <div className="font-bold text-[#CBD5E1]">
                   You&apos;re not currently eligible for this access
                 </div>
-                <div className="text-[#6B7280] mt-0.5">
+                <div className="text-[#94A3B8] mt-0.5">
                   This access is normally restricted to the {accessItem.group}.
                 </div>
               </div>
             </div>
 
-            <div className="exception-box bg-[#FFFBEB] border border-[#FDE68A] rounded-[11px] p-4 mt-3.5">
-              <div className="t1 text-[13.5px] font-bold text-[#92400E]">
+            <div className="exception-box bg-[#F59E0B]/10 border border-[#F59E0B]/30 rounded-[11px] p-4 mt-3.5">
+              <div className="t1 text-[13.5px] font-bold text-[#FCD34D]">
                 Need this access for your project?
               </div>
-              <div className="t2 text-[12px] text-[#78350F] mt-1">
+              <div className="t2 text-[12px] text-[#FDE68A] mt-1">
                 You can submit an exception request for review by the designated approver.
               </div>
               <button
                 onClick={() => onRequestException(accessItem.id)}
-                className="btn btn-primary btn-block w-full mt-3.5 bg-[#B45309] hover:bg-[#92400E] flex items-center justify-center gap-2 text-white"
+                className="btn btn-block w-full mt-3.5 bg-gradient-to-r from-[#F59E0B] to-[#D97706] text-white flex items-center justify-center gap-2 shadow-[0_4px_16px_rgba(245,158,11,0.35)]"
               >
                 <AlertTriangle className="w-4 h-4" /> Request Access Exception
               </button>

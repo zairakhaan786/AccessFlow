@@ -21,21 +21,22 @@ export function formatCurrentTimestamp(): string {
 }
 
 export async function generateNextNarId(): Promise<string> {
-  const allRequests = await prisma.accessRequest.findMany({
-    select: { id: true },
-  });
+  // Atomic single-statement upsert-increment so concurrent submissions can
+  // never receive the same NAR number. The counter is seeded lazily from the
+  // current max request number on first use, so existing records are never
+  // re-issued. Uses Postgres/SQLite `RETURNING` via Prisma raw.
+  const rows = await prisma.$queryRaw<Array<{ value: number }>>`
+    INSERT INTO "counters" ("id", "value")
+    VALUES ('NAR', (
+      SELECT COALESCE(MAX(CAST(SUBSTRING(id FROM 5) AS INTEGER)), 10480) + 1
+      FROM "access_requests"
+      WHERE id LIKE 'NAR-%'
+    ))
+    ON CONFLICT ("id") DO UPDATE SET "value" = "counters"."value" + 1
+    RETURNING "value";
+  `;
 
-  let maxNum = 10480;
-  for (const r of allRequests) {
-    if (r.id.startsWith("NAR-")) {
-      const num = parseInt(r.id.replace("NAR-", ""), 10);
-      if (!isNaN(num) && num > maxNum) {
-        maxNum = num;
-      }
-    }
-  }
-
-  return `NAR-${maxNum + 1}`;
+  return `NAR-${rows[0].value}`;
 }
 
 export async function submitRequestWorkflow({
@@ -754,6 +755,10 @@ export async function toggleAutomationWorkflow({
   accessItemId: string;
   actorUser: { id: string; name: string; email: string; role: string };
 }) {
+  if (actorUser.role !== "BOARD_ADMIN") {
+    throw new Error("Only Board Admins can modify provisioning settings.");
+  }
+
   const access = await prisma.accessItem.findUnique({
     where: { id: accessItemId },
   });
@@ -794,6 +799,10 @@ export async function updateBoardConfigWorkflow({
   providerName: string;
   actorUser: { id: string; name: string; email: string; role: string };
 }) {
+  if (actorUser.role !== "BOARD_ADMIN") {
+    throw new Error("Only Board Admins can update board configuration.");
+  }
+
   const access = await prisma.accessItem.findUnique({
     where: { id: accessItemId },
   });

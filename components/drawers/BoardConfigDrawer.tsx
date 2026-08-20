@@ -77,8 +77,8 @@ export default function BoardConfigDrawer({
       title={accessItem.name}
       subtitle={`${accessItem.tool} · Access configuration`}
     >
-      <div className="note-box flex items-center gap-2 text-[11.5px] text-[#6B7280] bg-[#F9FAFB] border border-gray-200/70 rounded-[9px] p-2.5 mb-5">
-        <Shield className="w-4 h-4 text-blue-600 flex-shrink-0" />
+      <div className="note-box flex items-center gap-2 text-[11.5px] text-[#94A3B8] bg-white/[0.04] border border-white/10 rounded-[9px] p-2.5 mb-5">
+        <Shield className="w-4 h-4 text-blue-400 flex-shrink-0" />
         <span>Changes here are governed and recorded in the audit trail.</span>
       </div>
 
@@ -89,11 +89,11 @@ export default function BoardConfigDrawer({
               <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
                 Access ID
               </label>
-              <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+              <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
                 {accessItem.accessId ? (
                   <span className="font-mono">{accessItem.accessId}</span>
                 ) : (
-                  <span className="text-[#D97706]">Not created</span>
+                  <span className="text-[#F59E0B]">Not created</span>
                 )}
               </div>
             </div>
@@ -102,7 +102,7 @@ export default function BoardConfigDrawer({
               <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
                 Board / account creator
               </label>
-              <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+              <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
                 {accessItem.creator}
               </div>
             </div>
@@ -111,7 +111,7 @@ export default function BoardConfigDrawer({
               <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
                 Approver
               </label>
-              <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+              <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
                 {accessItem.approverName}
               </div>
             </div>
@@ -120,7 +120,7 @@ export default function BoardConfigDrawer({
               <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
                 Backup approver
               </label>
-              <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+              <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
                 {accessItem.backupApproverName}
               </div>
             </div>
@@ -129,7 +129,7 @@ export default function BoardConfigDrawer({
               <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
                 Access provider / admin
               </label>
-              <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+              <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
                 {accessItem.providerName}
               </div>
             </div>
@@ -138,18 +138,18 @@ export default function BoardConfigDrawer({
               <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
                 Eligibility group
               </label>
-              <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+              <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
                 {accessItem.group}
               </div>
             </div>
           </div>
 
-          <div className="mt-6 pt-5 border-t border-[var(--border)] flex items-center justify-between">
+          <div className="mt-6 pt-5 border-t border-white/10 flex items-center justify-between">
             <div>
-              <div className="text-[13.5px] font-bold text-[#1F2937]">
+              <div className="text-[13.5px] font-bold text-[#E2E8F0]">
                 Automated provisioning
               </div>
-              <div className="text-[11.5px] text-[#9CA3AF] mt-0.5">
+              <div className="text-[11.5px] text-[#64748B] mt-0.5">
                 {accessItem.automation
                   ? "Enabled — access is granted automatically on approval."
                   : "Disabled — requests route to manual provisioning."}
@@ -163,7 +163,7 @@ export default function BoardConfigDrawer({
               style={{
                 backgroundColor: accessItem.automation
                   ? "var(--accent)"
-                  : "#D1D5DB",
+                  : "#33415E",
               }}
             >
               <span

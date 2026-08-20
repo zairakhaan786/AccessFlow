@@ -10,16 +10,40 @@ export default function ForgotPasswordPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate sending an email, but since this is a local development environment,
-    // we'll just redirect directly to the reset password screen for testing.
-    setTimeout(() => {
-      router.push(`/reset-password?email=${encodeURIComponent(email)}`);
-    }, 1000);
+    try {
+      const res = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data?.error || "Failed to request a reset link. Please try again.");
+        setIsLoading(false);
+        return;
+      }
+
+      // If a token is returned (no email provider configured), embed it in the
+      // reset URL so the flow still requires a valid, expiring token.
+      if (data?.token) {
+        router.push(
+          `/reset-password?email=${encodeURIComponent(email)}&token=${encodeURIComponent(data.token)}`
+        );
+      } else {
+        router.push(`/reset-password?email=${encodeURIComponent(email)}`);
+      }
+    } catch (err) {
+      setError("An unexpected error occurred. Please try again.");
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -38,6 +62,12 @@ export default function ForgotPasswordPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {error && (
+            <div className="p-3 bg-red-500/15 border border-red-500/30 rounded-xl text-xs text-red-200">
+              {error}
+            </div>
+          )}
+
           <div>
             <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1.5">
               Work Email

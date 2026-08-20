@@ -35,7 +35,7 @@ export default async function HomePage() {
       }),
       prisma.auditLog.findMany({
         orderBy: { timestamp: "desc" },
-        take: 15,
+        take: 500,
       }),
       prisma.notification.findMany({
         orderBy: { createdAt: "desc" },

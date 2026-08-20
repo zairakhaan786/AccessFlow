@@ -35,14 +35,14 @@ export default function DrawerShell({
   return (
     <>
       <div
-        className="overlay fixed inset-0 bg-[#0F172A]/40 backdrop-blur-xs z-50 animate-fadeIn"
+        className="overlay fixed inset-0 bg-[#02040A]/60 backdrop-blur-sm z-50 animate-fadeIn"
         onClick={onClose}
       />
-      <div className="drawer fixed top-0 right-0 h-full w-[clamp(420px,38vw,640px)] max-w-full bg-white/98 backdrop-blur-xl shadow-2xl z-[51] overflow-y-auto animate-drawerIn flex flex-col border-l border-[var(--border)]">
-        <div className="drawer-head sticky top-0 bg-white/95 backdrop-blur-md z-10 flex items-start justify-between p-6 border-b border-[var(--border)]">
+      <div className="drawer fixed top-0 right-0 h-full w-[clamp(420px,38vw,640px)] max-w-full bg-[#0D1526]/95 backdrop-blur-xl shadow-2xl z-[51] overflow-y-auto animate-drawerIn flex flex-col border-l border-white/10">
+        <div className="drawer-head sticky top-0 bg-[#0D1526]/90 backdrop-blur-md z-10 flex items-start justify-between p-6 border-b border-white/[0.08]">
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-[18px] font-extrabold text-[#111827]">{title}</h3>
+              <h3 className="text-[18px] font-extrabold text-[#E5EAF3]">{title}</h3>
               {badge}
             </div>
             {subtitle && (
@@ -51,7 +51,7 @@ export default function DrawerShell({
           </div>
           <button
             onClick={onClose}
-            className="drawer-close p-1 text-[#9CA3AF] hover:text-[#4B5563] rounded-md transition"
+            className="drawer-close p-1 text-[#64748B] hover:text-white hover:bg-white/10 rounded-md transition"
             aria-label="Close drawer"
           >
             <X className="w-5 h-5" />

@@ -62,7 +62,7 @@ export default function AdminRequestDetailDrawer({
           <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
             Requester
           </label>
-          <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+          <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
             {request.requesterName}
           </div>
         </div>
@@ -71,7 +71,7 @@ export default function AdminRequestDetailDrawer({
           <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
             Beneficiary
           </label>
-          <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+          <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
             {request.beneficiaryName}
           </div>
         </div>
@@ -80,7 +80,7 @@ export default function AdminRequestDetailDrawer({
           <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
             Approved by
           </label>
-          <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+          <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
             {request.approverName}
           </div>
         </div>
@@ -89,24 +89,24 @@ export default function AdminRequestDetailDrawer({
           <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
             Submitted
           </label>
-          <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+          <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
             {submittedDate}
           </div>
         </div>
       </div>
 
       {request.justification && (
-        <div className="mt-6 pt-5 border-t border-[var(--border)]">
+        <div className="mt-6 pt-5 border-t border-white/10">
           <div className="divider-label text-[11.5px] font-bold uppercase tracking-wider text-[var(--muted-2)] mb-2">
             Reason / Details
           </div>
-          <div className="text-[13.5px] text-[#374151] leading-relaxed">
+          <div className="text-[13.5px] text-[#CBD5E1] leading-relaxed">
             {request.justification}
           </div>
         </div>
       )}
 
-      <div className="mt-6 pt-5 border-t border-[var(--border)]">
+      <div className="mt-6 pt-5 border-t border-white/10">
         <div className="divider-label text-[11.5px] font-bold uppercase tracking-wider text-[var(--muted-2)] mb-3">
           Timeline
         </div>
@@ -114,7 +114,7 @@ export default function AdminRequestDetailDrawer({
       </div>
 
       {request.status === "Pending Manual Provisioning" && (
-        <div className="mt-6 pt-6 border-t border-[var(--border)]">
+        <div className="mt-6 pt-6 border-t border-white/10">
           <button
             onClick={handleProvision}
             disabled={isProvisioning}
@@ -123,7 +123,7 @@ export default function AdminRequestDetailDrawer({
             <Check className="w-4 h-4 stroke-[2.5]" />
             {isProvisioning ? "Provisioning..." : "Provision Access"}
           </button>
-          <p className="text-[11.5px] text-[#9CA3AF] mt-2.5 text-center">
+          <p className="text-[11.5px] text-[#64748B] mt-2.5 text-center">
             This marks the request Completed and notifies the requester.
           </p>
         </div>

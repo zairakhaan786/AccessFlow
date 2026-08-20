@@ -4,7 +4,7 @@ import React, { useState, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
-import { AlertCircle, ArrowRight, User, Mail, Lock, Building, ShieldCheck, Briefcase } from "lucide-react";
+import { AlertCircle, ArrowRight, User, Mail, Lock, Briefcase } from "lucide-react";
 import AutomationBackground from "@/components/auth/AutomationBackground";
 
 const DEPARTMENTS = [
@@ -25,7 +25,6 @@ function SignupForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [group, setGroup] = useState(DEPARTMENTS[0]);
-  const [role, setRole] = useState("EMPLOYEE");
   const [title, setTitle] = useState("");
 
   const [error, setError] = useState<string | null>(null);
@@ -59,7 +58,6 @@ function SignupForm() {
           email,
           password,
           group,
-          role,
           title,
         }),
       });
@@ -83,7 +81,7 @@ function SignupForm() {
       if (loginRes?.error) {
         router.push("/login?registered=true");
       } else {
-        router.push("/");
+        router.push("/dashboard");
         router.refresh();
       }
     } catch (err: any) {
@@ -191,8 +189,7 @@ function SignupForm() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div>
+            <div>
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">
                   Department
                 </label>
@@ -209,22 +206,6 @@ function SignupForm() {
                   ))}
                 </select>
               </div>
-
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">
-                  Role
-                </label>
-                <select
-                  className="w-full h-10 px-3 rounded-lg bg-black/25 border border-white/15 text-white text-xs outline-none transition focus:border-[#2F6FED] focus:ring-2 focus:ring-[#2F6FED]/30"
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                  disabled={isLoading}
-                >
-                  <option value="EMPLOYEE" className="bg-slate-900 text-white">Employee</option>
-                  <option value="BOARD_ADMIN" className="bg-slate-900 text-white">Board Admin</option>
-                </select>
-              </div>
-            </div>
 
             <div>
               <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">

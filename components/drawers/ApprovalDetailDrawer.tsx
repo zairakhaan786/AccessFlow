@@ -70,7 +70,7 @@ export default function ApprovalDetailDrawer({
           <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
             Requester
           </label>
-          <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+          <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
             {request.requesterName}
           </div>
         </div>
@@ -79,7 +79,7 @@ export default function ApprovalDetailDrawer({
           <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
             Beneficiary
           </label>
-          <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+          <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
             {request.beneficiaryName}
           </div>
         </div>
@@ -90,11 +90,11 @@ export default function ApprovalDetailDrawer({
           </label>
           <div className="f-value text-[13.5px] font-semibold">
             {request.isException ? (
-              <span className="text-[#B45309] font-bold">
+              <span className="text-[#F59E0B] font-bold">
                 Exception — outside normal eligibility
               </span>
             ) : (
-              <span className="text-[#15803D] font-bold">Confirmed eligible</span>
+              <span className="text-[#86EFAC] font-bold">Confirmed eligible</span>
             )}
           </div>
         </div>
@@ -103,7 +103,7 @@ export default function ApprovalDetailDrawer({
           <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
             Access provider
           </label>
-          <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+          <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
             {request.providerName}
           </div>
         </div>
@@ -112,7 +112,7 @@ export default function ApprovalDetailDrawer({
           <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
             Provisioning
           </label>
-          <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+          <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
             {request.automation ? "Automatic on approval" : "Manual, by provider"}
           </div>
         </div>
@@ -121,19 +121,19 @@ export default function ApprovalDetailDrawer({
           <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
             Requested
           </label>
-          <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+          <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
             {submittedDate}
           </div>
         </div>
       </div>
 
       {request.isException && (
-        <div className="field-grid grid grid-cols-3 gap-4 mt-4.5 pt-4 border-t border-[var(--border)]">
+        <div className="field-grid grid grid-cols-3 gap-4 mt-4.5 pt-4 border-t border-white/10">
           <div className="field">
             <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
               Reason
             </label>
-            <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+            <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
               {request.reason || "—"}
             </div>
           </div>
@@ -141,7 +141,7 @@ export default function ApprovalDetailDrawer({
             <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
               Required until
             </label>
-            <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+            <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
               {request.requiredUntil || "—"}
             </div>
           </div>
@@ -149,7 +149,7 @@ export default function ApprovalDetailDrawer({
             <label className="f-label block text-[11.5px] text-[var(--muted-2)] mb-1">
               Urgency
             </label>
-            <div className="f-value text-[13.5px] font-semibold text-[#1F2937]">
+            <div className="f-value text-[13.5px] font-semibold text-[#E2E8F0]">
               {request.urgency || "—"}
             </div>
           </div>
@@ -157,17 +157,17 @@ export default function ApprovalDetailDrawer({
       )}
 
       {request.justification && (
-        <div className="mt-6 pt-5 border-t border-[var(--border)]">
+        <div className="mt-6 pt-5 border-t border-white/10">
           <div className="divider-label text-[11.5px] font-bold uppercase tracking-wider text-[var(--muted-2)] mb-2">
             Business Justification
           </div>
-          <div className="text-[13.5px] text-[#374151] leading-relaxed">
+          <div className="text-[13.5px] text-[#CBD5E1] leading-relaxed">
             {request.justification}
           </div>
         </div>
       )}
 
-      <div className="mt-6 pt-5 border-t border-[var(--border)]">
+      <div className="mt-6 pt-5 border-t border-white/10">
         <div className="divider-label text-[11.5px] font-bold uppercase tracking-wider text-[var(--muted-2)] mb-3">
           Timeline
         </div>
@@ -175,7 +175,7 @@ export default function ApprovalDetailDrawer({
       </div>
 
       {isPendingApproval && (
-        <div className="btn-row flex items-center gap-2.5 mt-6 pt-6 border-t border-[var(--border)]">
+        <div className="btn-row flex items-center gap-2.5 mt-6 pt-6 border-t border-white/10">
           <button
             onClick={handleApprove}
             disabled={isApproving}

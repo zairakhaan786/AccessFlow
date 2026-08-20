@@ -158,7 +158,7 @@ function LoginForm() {
             <label htmlFor="login-password" className="block text-[11px] font-bold uppercase tracking-wider text-slate-300">
               Password
             </label>
-            <Link href="/forgot-password" onClick={(e) => e.preventDefault()} className="text-[11px] font-semibold text-[#60A5FA] hover:text-white hover:underline transition">
+            <Link href="/forgot-password" className="text-[11px] font-semibold text-[#60A5FA] hover:text-white hover:underline transition">
               Forgot password?
             </Link>
           </div>

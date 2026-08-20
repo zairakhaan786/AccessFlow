@@ -2,7 +2,9 @@
 
 import React, { useState } from "react";
 import Header from "@/components/layout/Header";
-import AutomationBackground from "@/components/auth/AutomationBackground";
+import CinematicBackground from "@/components/ui/CinematicBackground";
+import CursorSpotlight from "@/components/ui/CursorSpotlight";
+import Reveal from "@/components/ui/Reveal";
 import SearchSection, { AccessCatalogItem } from "./SearchSection";
 import MyRequestsSection, { RequestItem } from "./MyRequestsSection";
 import ApprovalsSection from "./ApprovalsSection";
@@ -94,11 +96,11 @@ export default function MainDashboard({
   );
 
   return (
-    <div className="min-h-screen bg-[var(--bg)] relative overflow-hidden">
-      {/* Subtle background accent at 5% opacity behind dashboard */}
-      <div className="fixed inset-0 z-0 opacity-5 pointer-events-none">
-        <AutomationBackground />
-      </div>
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Cinematic dark background */}
+      <CinematicBackground />
+
+      <CursorSpotlight />
 
       <div className="relative z-10 flex flex-col min-h-screen">
         <Header
@@ -109,87 +111,121 @@ export default function MainDashboard({
 
       <main className="w-[92%] max-w-[1800px] mx-auto py-6 pb-14 flex flex-col gap-4">
         {/* Welcome Greeting */}
-        <div className="welcome">
-          <h1 className="text-[23px] font-extrabold text-[#111827] mb-1">
-            {isAdmin ? `Board Admin · ${currentUser.name}` : `Welcome back, ${firstName}`}
-          </h1>
-          <p className="text-[13.5px] text-[var(--muted)] max-w-[760px]">
-            {isAdmin
-              ? "Manage the boards you administer, provision access, and review governed configuration changes."
-              : "Search for access, track your requests, and act on anything awaiting your approval — all in one place."}
-          </p>
-        </div>
+        <Reveal y={14}>
+          <div className="welcome">
+            <h1 className="text-[23px] font-extrabold text-[#E5EAF3] mb-1 tracking-tight">
+              {isAdmin ? (
+                <>
+                  Board Admin · <span className="text-gradient">{currentUser.name}</span>
+                </>
+              ) : (
+                <>
+                  Welcome back,{" "}
+                  <span className="text-gradient">{firstName}</span>
+                </>
+              )}
+            </h1>
+            <p className="text-[13.5px] text-[var(--muted)] max-w-[760px]">
+              {isAdmin
+                ? "Manage the boards you administer, provision access, and review governed configuration changes."
+                : "Search for access, track your requests, and act on anything awaiting your approval — all in one place."}
+            </p>
+          </div>
+        </Reveal>
 
         {/* Search & Directory Section */}
-        <SearchSection
-          catalog={catalog}
-          currentUserGroup={currentUser.group}
-          onOpenAccessDetails={(accessId) =>
-            setActiveDrawer({ type: "access-details", id: accessId })
-          }
-        />
+        <Reveal delay={0.05}>
+          <SearchSection
+            catalog={catalog}
+            currentUserGroup={currentUser.group}
+            onOpenAccessDetails={(accessId) =>
+              setActiveDrawer({ type: "access-details", id: accessId })
+            }
+          />
+        </Reveal>
 
         {/* Persona Views */}
         {isAdmin ? (
           <>
-            <MyRequestsSection
-              requests={requests}
-              currentUserName={currentUser.name}
-              compact={true}
-              onOpenRequestDetail={(requestId) =>
-                setActiveDrawer({ type: "request-detail", id: requestId })
-              }
-            />
-
-            <ApprovalsSection
-              requests={requests}
-              currentUserName={currentUser.name}
-              onOpenApprovalDetail={(requestId) =>
-                setActiveDrawer({ type: "approval-detail", id: requestId })
-              }
-            />
-
-            <MyBoardsSection
-              catalog={catalog}
-              currentUserName={currentUser.name}
-              onOpenBoardConfig={(accessId) =>
-                setActiveDrawer({ type: "board-config", id: accessId })
-              }
-            />
-
-            <AdminQueueSection
-              requests={requests}
-              currentUserName={currentUser.name}
-              onOpenAdminRequestDetail={(requestId) =>
-                setActiveDrawer({ type: "admin-request-detail", id: requestId })
-              }
-            />
-
-            <AccessIdGovernanceSection queueItems={governanceQueue} />
-
-            <RecentActivitySection logs={auditLogs} />
-          </>
-        ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4 items-start">
-            <div className="flex flex-col gap-4">
+            <Reveal delay={0.1}>
               <MyRequestsSection
                 requests={requests}
                 currentUserName={currentUser.name}
-                compact={false}
+                compact={true}
                 onOpenRequestDetail={(requestId) =>
                   setActiveDrawer({ type: "request-detail", id: requestId })
                 }
               />
-            </div>
+            </Reveal>
 
-            <div className="flex flex-col gap-4">
+            <Reveal delay={0.14}>
               <ApprovalsSection
                 requests={requests}
                 currentUserName={currentUser.name}
                 onOpenApprovalDetail={(requestId) =>
                   setActiveDrawer({ type: "approval-detail", id: requestId })
                 }
+                onOpenRejectModal={(requestId) =>
+                  setActiveModal({ type: "reject", data: { requestId } })
+                }
               />
+            </Reveal>
+
+            <Reveal delay={0.18}>
+              <MyBoardsSection
+                catalog={catalog}
+                currentUserName={currentUser.name}
+                onOpenBoardConfig={(accessId) =>
+                  setActiveDrawer({ type: "board-config", id: accessId })
+                }
+              />
+            </Reveal>
+
+            <Reveal delay={0.22}>
+              <AdminQueueSection
+                requests={requests}
+                onOpenAdminRequestDetail={(requestId) =>
+                  setActiveDrawer({ type: "admin-request-detail", id: requestId })
+                }
+              />
+            </Reveal>
+
+            <Reveal delay={0.26}>
+              <AccessIdGovernanceSection queueItems={governanceQueue} />
+            </Reveal>
+
+            <Reveal delay={0.3}>
+              <RecentActivitySection logs={auditLogs} />
+            </Reveal>
+          </>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4 items-start">
+            <div className="flex flex-col gap-4">
+              <Reveal delay={0.1}>
+                <MyRequestsSection
+                  requests={requests}
+                  currentUserName={currentUser.name}
+                  compact={false}
+                  onOpenRequestDetail={(requestId) =>
+                    setActiveDrawer({ type: "request-detail", id: requestId })
+                  }
+                />
+              </Reveal>
+            </div>
+
+            <div className="flex flex-col gap-4">
+              <Reveal delay={0.16}>
+                <ApprovalsSection
+                  requests={requests}
+                  currentUserName={currentUser.name}
+                  onOpenApprovalDetail={(requestId) =>
+                    setActiveDrawer({ type: "approval-detail", id: requestId })
+                  }
+                  onOpenRejectModal={(requestId) =>
+                    setActiveModal({ type: "reject", data: { requestId } })
+                  }
+                />
+              </Reveal>
             </div>
           </div>
         )}

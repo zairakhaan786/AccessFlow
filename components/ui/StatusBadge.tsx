@@ -56,7 +56,7 @@ export function Timeline({ steps }: { steps: TimelineStepItem[] }) {
             {!isLast && (
               <div
                 className="t-line absolute left-[9px] top-[20px] bottom-0 w-[1px]"
-                style={{ background: s.state === "done" ? "#22C55E" : "#E5E7EB" }}
+                style={{ background: s.state === "done" ? "#22C55E" : "rgba(255,255,255,0.15)" }}
               />
             )}
 
@@ -65,25 +65,25 @@ export function Timeline({ steps }: { steps: TimelineStepItem[] }) {
                 <CheckCircle2 className="w-5 h-5 text-[#22C55E]" />
               )}
               {s.state === "current" && (
-                <div className="w-5 h-5 rounded-full border-2 border-[var(--accent)] flex items-center justify-center bg-white">
+                <div className="w-5 h-5 rounded-full border-2 border-[var(--accent)] flex items-center justify-center bg-[#0A0F1C] shadow-[0_0_10px_rgba(47,111,237,0.5)]">
                   <div className="w-2 h-2 rounded-full bg-[var(--accent)]" />
                 </div>
               )}
               {s.state === "pending" && (
-                <Circle className="w-5 h-5 text-[#D1D5DB]" />
+                <Circle className="w-5 h-5 text-[#475569]" />
               )}
             </div>
 
             <div>
               <div
                 className={`t-label text-[13.5px] font-bold ${
-                  s.state === "pending" ? "text-[#9CA3AF]" : "text-[#111827]"
+                  s.state === "pending" ? "text-[#64748B]" : "text-[#E5EAF3]"
                 }`}
               >
                 {s.label}
               </div>
               {(s.actor || s.ts) && (
-                <div className="t-meta text-[11.5px] text-[#6B7280] mt-0.5">
+                <div className="t-meta text-[11.5px] text-[#94A3B8] mt-0.5">
                   {s.actor} {s.actor && s.ts ? "·" : ""} {s.ts}
                 </div>
               )}

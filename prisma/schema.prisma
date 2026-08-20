@@ -17,6 +17,8 @@ model User {
   title             String?         // e.g. "Project Manager", "IT Support · Access Provider"
   initials          String?
   tone              String?         @default("#2563EB")
+  resetToken        String?
+  resetTokenExpiresAt DateTime?
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
 
@@ -129,4 +131,11 @@ model Notification {
   createdAt DateTime @default(now())
 
   @@map("notifications")
+}
+
+model Counter {
+  id    String @id // "NAR" singleton row
+  value Int    @default(10480)
+
+  @@map("counters")
 }

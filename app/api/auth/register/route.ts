@@ -8,7 +8,6 @@ const registerSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   group: z.string().min(1, "Please select a department/group"),
-  role: z.enum(["EMPLOYEE", "BOARD_ADMIN"]).default("EMPLOYEE"),
   title: z.string().optional(),
 });
 
@@ -24,7 +23,10 @@ export async function POST(req: Request) {
       );
     }
 
-    const { name, email, password, group, role, title } = result.data;
+    // Self-service registrations are always created as employees.
+    // Board Admin privileges are provisioned only by database seeding.
+    const { name, email, password, group, title } = result.data;
+    const role = "EMPLOYEE";
     const normalizedEmail = email.toLowerCase().trim();
 
     const existingUser = await prisma.user.findUnique({
@@ -46,12 +48,9 @@ export async function POST(req: Request) {
       .join("")
       .toUpperCase();
 
-    const tone =
-      role === "BOARD_ADMIN"
-        ? "#334155"
-        : ["#2563EB", "#7C3AED", "#059669", "#D97706"][
-            Math.floor(Math.random() * 4)
-          ];
+    const tone = ["#2563EB", "#7C3AED", "#059669", "#D97706"][
+      Math.floor(Math.random() * 4)
+    ];
 
     const newUser = await prisma.user.create({
       data: {
@@ -60,7 +59,7 @@ export async function POST(req: Request) {
         passwordHash,
         role,
         group,
-        title: title || (role === "BOARD_ADMIN" ? "Board Administrator" : "Team Member"),
+        title: title || "Team Member",
         initials,
         tone,
       },

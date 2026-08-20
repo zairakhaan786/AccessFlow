@@ -75,8 +75,8 @@ export default function ExceptionFormDrawer({
       title="Request Access Exception"
       subtitle={`${accessItem.tool} – ${accessItem.name}`}
     >
-      <div className="warn-box flex items-start gap-2 text-[13px] text-[#374151] bg-[#F9FAFB] border border-[var(--border)] rounded-[9px] p-3.5 mb-5">
-        <AlertTriangle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
+      <div className="warn-box flex items-start gap-2 text-[13px] text-[#CBD5E1] bg-white/[0.04] border border-white/10 rounded-[9px] p-3.5 mb-5">
+        <AlertTriangle className="w-4 h-4 text-amber-400 mt-0.5 flex-shrink-0" />
         <div>
           You&apos;re requesting access outside your normal eligibility group (
           <strong>{accessItem.group}</strong>). This is submitted as an exception for
@@ -88,12 +88,12 @@ export default function ExceptionFormDrawer({
         <span className="form-label text-[11.5px] font-bold uppercase tracking-wider text-[var(--muted-2)] mb-2 block">
           Access
         </span>
-        <div className="kv-list border border-[var(--border)] rounded-[10px] overflow-hidden text-[13px]">
+        <div className="kv-list border border-white/10 rounded-[10px] overflow-hidden text-[13px]">
           <div className="kv-row flex items-center justify-between p-2.5 px-3.5">
             <span className="text-[var(--muted-2)]">
               {accessItem.tool} – {accessItem.name}
             </span>
-            <span className="font-semibold text-[#1F2937]">{accessItem.category}</span>
+            <span className="font-semibold text-[#E2E8F0]">{accessItem.category}</span>
           </div>
         </div>
       </div>
@@ -112,7 +112,7 @@ export default function ExceptionFormDrawer({
           }}
         />
         {errorField?.field === "reason" && (
-          <div className="field-error text-[11.5px] text-red-600 mt-1.5 flex items-center gap-1">
+          <div className="field-error text-[11.5px] text-red-400 mt-1.5 flex items-center gap-1">
             <AlertTriangle className="w-3.5 h-3.5" />
             {errorField.msg}
           </div>
@@ -136,7 +136,7 @@ export default function ExceptionFormDrawer({
           }}
         />
         {errorField?.field === "justification" && (
-          <div className="field-error text-[11.5px] text-red-600 mt-1.5 flex items-center gap-1">
+          <div className="field-error text-[11.5px] text-red-400 mt-1.5 flex items-center gap-1">
             <AlertTriangle className="w-3.5 h-3.5" />
             {errorField.msg}
           </div>
@@ -177,16 +177,16 @@ export default function ExceptionFormDrawer({
         <span className="form-label text-[11.5px] font-bold uppercase tracking-wider text-[var(--muted-2)] mb-2 block">
           Review
         </span>
-        <div className="kv-list border border-[var(--border)] rounded-[10px] overflow-hidden text-[13px]">
-          <div className="kv-row flex items-center justify-between p-2.5 px-3.5 border-b border-[#F3F4F6]">
+        <div className="kv-list border border-white/10 rounded-[10px] overflow-hidden text-[13px]">
+          <div className="kv-row flex items-center justify-between p-2.5 px-3.5 border-b border-white/[0.07]">
             <span className="text-[var(--muted-2)]">Will be reviewed by</span>
-            <span className="font-semibold text-[#1F2937]">
+            <span className="font-semibold text-[#E2E8F0]">
               {accessItem.approverName}
             </span>
           </div>
           <div className="kv-row flex items-center justify-between p-2.5 px-3.5">
             <span className="text-[var(--muted-2)]">Backup approver</span>
-            <span className="font-semibold text-[#1F2937]">
+            <span className="font-semibold text-[#E2E8F0]">
               {accessItem.backupApproverName}
             </span>
           </div>
@@ -206,7 +206,7 @@ export default function ExceptionFormDrawer({
           type="button"
           onClick={handleSubmit}
           disabled={isLoading}
-          className="btn btn-primary flex-1 bg-[#B45309] hover:bg-[#92400E] text-white flex items-center justify-center gap-2"
+          className="btn btn-primary flex-1 bg-gradient-to-r from-[#F59E0B] to-[#D97706] text-white flex items-center justify-center gap-2 shadow-[0_4px_16px_rgba(245,158,11,0.35)]"
         >
           {isLoading ? "Submitting..." : "Submit Request"}
         </button>

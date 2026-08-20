@@ -11,6 +11,7 @@ export interface AccessIdQueueItemData {
   status: string;
   requestedBy: string;
   requestedTs: string;
+  approvedTs?: string | null;
   accessItem: {
     tool: string;
     name: string;
@@ -45,14 +46,14 @@ export default function AccessIdGovernanceSection({
   };
 
   return (
-    <div className="card card-tinted-violet border-[#E4DBFB] bg-[#FBFAFF]">
+    <div className="card card-tinted-violet">
       <div className="section-head mb-4">
         <div className="section-head-left flex items-center gap-2.5">
-          <div className="section-icon w-[34px] h-[34px] rounded-[9px] bg-[#EAF1FF] text-[var(--accent)] flex items-center justify-center flex-shrink-0">
+          <div className="section-icon w-[34px] h-[34px] rounded-[9px] bg-[#8B5CF6]/15 text-[#A78BFA] flex items-center justify-center flex-shrink-0">
             <Key className="w-4 h-4" />
           </div>
           <div>
-            <h2 className="section-title text-[16px] font-extrabold text-[#111827]">
+            <h2 className="section-title text-[16px] font-extrabold text-[#E5EAF3]">
               Access ID Requests
             </h2>
             <p className="section-sub text-[12px] text-[var(--muted-2)] mt-0.5">
@@ -66,21 +67,21 @@ export default function AccessIdGovernanceSection({
         {pending.map((q) => (
           <div
             key={q.id}
-            className="bg-white border border-[var(--border)] rounded-[11px] p-4 shadow-xs"
+            className="bg-white/[0.04] border border-white/10 rounded-[11px] p-4 shadow-[0_4px_16px_rgba(0,0,0,0.3)]"
           >
             <div className="flex items-center justify-between">
               <div>
-                <div className="result-title text-[14px] font-bold text-[#111827]">
+                <div className="result-title text-[14px] font-bold text-[#E5EAF3]">
                   {q.accessItem.tool} – {q.accessItem.name}
                 </div>
-                <div className="text-[11.5px] text-[#9CA3AF] mt-1">
+                <div className="text-[11.5px] text-[#64748B] mt-1">
                   Requested by {q.requestedBy} · {q.requestedTs}
                 </div>
               </div>
               <span className="badge badge-amber">Pending Review</span>
             </div>
 
-            <div className="flex items-center gap-1.5 mt-3 text-[11.5px] text-[#15803D] bg-[#F0FDF4] border border-[#BBF7D0] rounded-[8px] px-3 py-2 w-fit">
+            <div className="flex items-center gap-1.5 mt-3 text-[11.5px] text-[#86EFAC] bg-[#22C55E]/10 border border-[#22C55E]/30 rounded-[8px] px-3 py-2 w-fit">
               <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
               Duplicate check passed — no existing Access ID found.
             </div>

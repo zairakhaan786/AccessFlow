@@ -26,6 +26,7 @@ export default function AccessIdStatusDrawer({
   if (!accessItem || !queueItem) return null;
 
   const isCreated = queueItem.status === "Access ID Created";
+  const approvedTs = queueItem.approvedTs || "—";
 
   const steps = [
     {
@@ -36,14 +37,14 @@ export default function AccessIdStatusDrawer({
     },
     {
       label: "Board Admin Review (governed)",
-      actor: isCreated ? "Rahul Sharma" : "Pending review",
-      ts: isCreated ? "17 Aug 2026, 4:00 PM" : "—",
+      actor: isCreated ? "Board Admin" : "Pending review",
+      ts: isCreated ? approvedTs : "—",
       state: isCreated ? ("done" as const) : ("current" as const),
     },
     {
       label: "Access ID Created",
       actor: isCreated ? "System" : "",
-      ts: isCreated ? "17 Aug 2026, 4:00 PM" : "",
+      ts: isCreated ? approvedTs : "",
       state: isCreated ? ("done" as const) : ("pending" as const),
     },
     {
@@ -62,17 +63,17 @@ export default function AccessIdStatusDrawer({
       subtitle="Access ID status"
       badge={<StatusBadge status={isCreated ? "Completed" : "Pending Governance Review"} />}
     >
-      <p className="text-[13.5px] text-[#6B7280]">
+      <p className="text-[13.5px] text-[#94A3B8]">
         Access ID creation is a governed step reviewed by the Board Admin before it&apos;s issued.
       </p>
 
-      <div className="mt-6 pt-5 border-t border-[var(--border)]">
+      <div className="mt-6 pt-5 border-t border-white/10">
         <Timeline steps={steps} />
       </div>
 
       {isCreated ? (
-        <div className="mt-6 flex items-center justify-between gap-3 bg-[#F0FDF4] border border-[#BBF7D0] rounded-[9px] p-3.5">
-          <div className="text-[13px] font-semibold text-[#15803D]">
+        <div className="mt-6 flex items-center justify-between gap-3 bg-[#22C55E]/10 border border-[#22C55E]/30 rounded-[9px] p-3.5">
+          <div className="text-[13px] font-semibold text-[#86EFAC]">
             Access ID {accessItem.accessId} created.
           </div>
           <button
@@ -83,7 +84,7 @@ export default function AccessIdStatusDrawer({
           </button>
         </div>
       ) : (
-        <div className="mt-6 text-[13px] text-[#9CA3AF] flex items-center gap-2">
+        <div className="mt-6 text-[13px] text-[#64748B] flex items-center gap-2">
           <Clock className="w-4 h-4" /> Waiting on the Board Admin. You&apos;ll be notified
           once it&apos;s created.
         </div>

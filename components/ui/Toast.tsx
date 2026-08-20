@@ -50,10 +50,10 @@ export function ToastContainer() {
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className={`toast pointer-events-auto flex items-center gap-2.5 text-white px-4 py-3 rounded-[var(--radius-control)] text-[13px] font-semibold shadow-lg max-w-[360px] ${
+          className={`toast pointer-events-auto flex items-center gap-2.5 text-white px-4 py-3 rounded-[var(--radius-control)] text-[13px] font-semibold shadow-2xl max-w-[360px] backdrop-blur-xl border ${
             toast.type === "error"
-              ? "bg-[#991B1B] text-white"
-              : "bg-[#065F46] text-white"
+              ? "bg-[#1A0B14]/90 border-red-500/30"
+              : "bg-[#0A1A14]/90 border-emerald-500/30"
           } ${toast.leaving ? "animate-toastOut" : "animate-toastIn"}`}
         >
           <span className="toast-icon flex flex-shrink-0">

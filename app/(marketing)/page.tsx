@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { ArrowRight, Shield, Zap, Search, Key } from "lucide-react";
 import AutomationBackground from "@/components/auth/AutomationBackground";
+import Reveal from "@/components/ui/Reveal";
 
 export default function MarketingHomePage() {
   return (
@@ -44,29 +45,35 @@ export default function MarketingHomePage() {
 
         {/* Feature Highlights */}
         <div className="mt-32 w-full grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-          <div className="p-6 rounded-2xl bg-[#16233F]/80 backdrop-blur-xl border border-white/10 shadow-xl">
-            <div className="w-10 h-10 rounded-lg bg-[#2F6FED]/20 border border-[#2F6FED]/30 flex items-center justify-center mb-4">
+          <Reveal delay={0.1}>
+          <div className="p-6 rounded-2xl bg-[#16233F]/80 backdrop-blur-xl border border-white/10 shadow-xl hover:border-white/25 hover:-translate-y-1 transition-all duration-300">
+            <div className="w-10 h-10 rounded-lg bg-[#2F6FED]/20 border border-[#2F6FED]/30 flex items-center justify-center mb-4 shadow-[0_0_18px_rgba(47,111,237,0.25)]">
               <Search className="w-5 h-5 text-[#60A5FA]" />
             </div>
             <h3 className="text-lg font-bold text-white mb-2">Access Directory</h3>
             <p className="text-sm text-slate-400">Browse and request access to standardized boards and applications.</p>
           </div>
+          </Reveal>
           
-          <div className="p-6 rounded-2xl bg-[#16233F]/80 backdrop-blur-xl border border-white/10 shadow-xl">
-            <div className="w-10 h-10 rounded-lg bg-[#2F6FED]/20 border border-[#2F6FED]/30 flex items-center justify-center mb-4">
+          <Reveal delay={0.2}>
+          <div className="p-6 rounded-2xl bg-[#16233F]/80 backdrop-blur-xl border border-white/10 shadow-xl hover:border-white/25 hover:-translate-y-1 transition-all duration-300">
+            <div className="w-10 h-10 rounded-lg bg-[#2F6FED]/20 border border-[#2F6FED]/30 flex items-center justify-center mb-4 shadow-[0_0_18px_rgba(47,111,237,0.25)]">
               <Zap className="w-5 h-5 text-[#60A5FA]" />
             </div>
             <h3 className="text-lg font-bold text-white mb-2">Automated Provisioning</h3>
             <p className="text-sm text-slate-400">Instantly provision access upon approval without manual IT intervention.</p>
           </div>
+          </Reveal>
 
-          <div className="p-6 rounded-2xl bg-[#16233F]/80 backdrop-blur-xl border border-white/10 shadow-xl">
-            <div className="w-10 h-10 rounded-lg bg-[#2F6FED]/20 border border-[#2F6FED]/30 flex items-center justify-center mb-4">
+          <Reveal delay={0.3}>
+          <div className="p-6 rounded-2xl bg-[#16233F]/80 backdrop-blur-xl border border-white/10 shadow-xl hover:border-white/25 hover:-translate-y-1 transition-all duration-300">
+            <div className="w-10 h-10 rounded-lg bg-[#2F6FED]/20 border border-[#2F6FED]/30 flex items-center justify-center mb-4 shadow-[0_0_18px_rgba(47,111,237,0.25)]">
               <Shield className="w-5 h-5 text-[#60A5FA]" />
             </div>
             <h3 className="text-lg font-bold text-white mb-2">Complete Audit Trail</h3>
             <p className="text-sm text-slate-400">Track every request, approval, and exception for compliance reporting.</p>
           </div>
+          </Reveal>
         </div>
       </div>
     </div>

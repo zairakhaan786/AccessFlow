@@ -34,20 +34,20 @@ export default function CloseRequestModal({
   };
 
   return (
-    <div className="modal-overlay fixed inset-0 bg-[#0F172A]/45 backdrop-blur-xs z-60 flex items-center justify-center p-4 animate-fadeIn">
-      <div className="modal-box bg-white rounded-[var(--radius-container)] w-full max-w-[440px] shadow-2xl overflow-hidden animate-modalIn border border-[var(--border)]">
-        <div className="modal-head flex items-center justify-between p-4.5 px-5.5 border-b border-[var(--border)]">
-          <h3 className="text-[15px] font-bold text-[#111827]">Close request</h3>
+    <div className="modal-overlay fixed inset-0 bg-[#02040A]/70 backdrop-blur-sm z-60 flex items-center justify-center p-4 animate-fadeIn">
+      <div className="modal-box bg-[#0D1526]/95 backdrop-blur-xl rounded-[var(--radius-container)] w-full max-w-[440px] shadow-2xl overflow-hidden animate-modalIn border border-white/10">
+        <div className="modal-head flex items-center justify-between p-4.5 px-5.5 border-b border-white/[0.08]">
+          <h3 className="text-[15px] font-bold text-[#E5EAF3]">Close request</h3>
           <button
             onClick={onClose}
-            className="drawer-close text-[#9CA3AF] hover:text-[#4B5563] p-1"
+            className="drawer-close text-[#64748B] hover:text-white p-1"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <div className="modal-body p-5">
-          <p className="text-[13.5px] text-[#4B5563] leading-relaxed">
+          <p className="text-[13.5px] text-[#94A3B8] leading-relaxed">
             Access has been successfully provisioned. Are you sure you want to close this
             request?
           </p>
