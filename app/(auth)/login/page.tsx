@@ -1,17 +1,18 @@
 "use client";
 
-import React, { useState, useEffect, useRef, Suspense } from "react";
+import React, { useState, useRef, Suspense } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Shield, Lock, Mail, AlertCircle, ArrowRight, UserCheck, CheckCircle2, Sparkles } from "lucide-react";
+import { Lock, Mail, AlertCircle, ArrowRight, Sparkles } from "lucide-react";
+import GlassSpotlight from "@/components/auth/GlassSpotlight";
 
 const DEMO_ACCOUNTS = [
   {
     name: "Manvi Mehta",
     email: "manvi@company.com",
     role: "Employee · Product Team",
-    desc: "Approver for Marketing & Support, requester for Salesforce",
+    desc: "Approver for Marketing & Zendesk, requester for Salesforce",
     password: "emp123",
     tone: "#2563EB",
     badge: "Requester & Approver",
@@ -38,19 +39,7 @@ function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [quickLoading, setQuickLoading] = useState<string | null>(null);
 
-  // Mouse position state for card spotlight effect
   const cardRef = useRef<HTMLDivElement>(null);
-  const [mousePos, setMousePos] = useState({ x: 200, y: 150 });
-  const [isHovered, setIsHovered] = useState(false);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    setMousePos({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -105,28 +94,19 @@ function LoginForm() {
   return (
     <div
       ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className="relative w-full max-w-[430px] rounded-2xl bg-[#0F172A]/75 backdrop-blur-2xl border border-white/[0.16] shadow-2xl p-8 sm:p-9 text-white overflow-hidden transition-all duration-300 animate-fadeIn"
+      className="relative w-full max-w-[430px] rounded-2xl bg-[#0F172A]/80 backdrop-blur-2xl border border-white/[0.18] shadow-2xl p-8 sm:p-9 text-white overflow-hidden transition-all duration-300 animate-fadeIn"
       style={{
-        boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.25)",
+        boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.3)",
       }}
     >
-      {/* Dynamic Cursor Spotlight Layer */}
-      <div
-        className="pointer-events-none absolute inset-0 transition-opacity duration-300"
-        style={{
-          opacity: isHovered ? 1 : 0.35,
-          background: `radial-gradient(350px circle at ${mousePos.x}px ${mousePos.y}px, rgba(47, 111, 237, 0.18), transparent 70%)`,
-        }}
-      />
+      {/* Eased Cursor Follow Spotlight */}
+      <GlassSpotlight cardRef={cardRef} />
 
-      {/* Specular Edge Highlight on Top */}
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+      {/* Top Specular Edge Line */}
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/35 to-transparent z-10 pointer-events-none" />
 
       {/* Brand Header */}
-      <div className="relative text-center mb-7">
+      <div className="relative text-center mb-7 z-10">
         <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-[#2F6FED] to-[#1E4FC7] text-white font-extrabold text-base mb-3 shadow-[0_0_20px_rgba(47,111,237,0.4)] border border-white/20">
           NA
         </div>
@@ -140,24 +120,30 @@ function LoginForm() {
 
       {/* Error Alert */}
       {error && (
-        <div className="mb-5 p-3 bg-red-500/15 border border-red-500/30 rounded-xl flex items-start gap-2.5 text-xs text-red-200 animate-fadeIn">
+        <div
+          role="alert"
+          aria-live="polite"
+          className="relative z-10 mb-5 p-3 bg-red-500/15 border border-red-500/30 rounded-xl flex items-start gap-2.5 text-xs text-red-200 animate-fadeIn"
+        >
           <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
           <span>{error}</span>
         </div>
       )}
 
       {/* Form */}
-      <form onSubmit={handleSubmit} className="relative space-y-4">
+      <form onSubmit={handleSubmit} className="relative z-10 space-y-4">
         <div>
-          <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+          <label htmlFor="login-email" className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1.5">
             Work Email
           </label>
           <div className="relative">
             <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
+              id="login-email"
               type="email"
               required
-              className="w-full h-10 pl-10 pr-3.5 rounded-lg bg-black/25 border border-white/15 text-white text-sm placeholder-slate-400 outline-none transition focus:border-[#2F6FED] focus:ring-2 focus:ring-[#2F6FED]/30 focus:bg-black/35"
+              autoComplete="email"
+              className="w-full h-10 pl-10 pr-3.5 rounded-lg bg-black/30 border border-white/15 text-white text-sm placeholder-slate-400 outline-none transition focus:border-[#2F6FED] focus:ring-2 focus:ring-[#2F6FED]/30 focus:bg-black/45"
               placeholder="name@company.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -168,16 +154,18 @@ function LoginForm() {
 
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300">
+            <label htmlFor="login-password" className="block text-[11px] font-bold uppercase tracking-wider text-slate-300">
               Password
             </label>
           </div>
           <div className="relative">
             <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
+              id="login-password"
               type="password"
               required
-              className="w-full h-10 pl-10 pr-3.5 rounded-lg bg-black/25 border border-white/15 text-white text-sm placeholder-slate-400 outline-none transition focus:border-[#2F6FED] focus:ring-2 focus:ring-[#2F6FED]/30 focus:bg-black/35"
+              autoComplete="current-password"
+              className="w-full h-10 pl-10 pr-3.5 rounded-lg bg-black/30 border border-white/15 text-white text-sm placeholder-slate-400 outline-none transition focus:border-[#2F6FED] focus:ring-2 focus:ring-[#2F6FED]/30 focus:bg-black/45"
               placeholder="••••••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -195,7 +183,7 @@ function LoginForm() {
             <span>Signing in...</span>
           ) : (
             <>
-              <span>Sign In</span>
+              <span>Log in</span>
               <ArrowRight className="w-4 h-4" />
             </>
           )}
@@ -203,7 +191,7 @@ function LoginForm() {
       </form>
 
       {/* Secondary Signup Link */}
-      <div className="relative mt-5 text-center text-xs text-slate-300">
+      <div className="relative z-10 mt-5 text-center text-xs text-slate-300">
         Don&apos;t have an account?{" "}
         <Link
           href="/signup"
@@ -216,7 +204,7 @@ function LoginForm() {
       {/* Evaluator 1-Click Demo Switcher */}
       {(process.env.NEXT_PUBLIC_ENABLE_DEMO_ACCOUNTS === "true" ||
         process.env.NODE_ENV !== "production") && (
-        <div className="relative mt-7 pt-6 border-t border-white/10">
+        <div className="relative z-10 mt-7 pt-6 border-t border-white/10">
           <div className="flex items-center justify-between mb-3">
             <span className="text-[11px] font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-[#60A5FA]" />
@@ -232,7 +220,7 @@ function LoginForm() {
                 type="button"
                 onClick={() => handleQuickLogin(acc)}
                 disabled={isLoading || !!quickLoading}
-                className="w-full text-left p-3 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.12] hover:border-white/25 transition-all duration-150 flex items-center justify-between gap-3 group shadow-xs active:translate-y-[1px]"
+                className="w-full text-left p-3 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.14] hover:border-white/30 transition-all duration-150 flex items-center justify-between gap-3 group shadow-xs active:translate-y-[1px]"
               >
                 <div className="flex items-center gap-2.5 min-w-0">
                   <div
@@ -280,9 +268,9 @@ export default function LoginPage() {
     <div className="min-h-screen relative flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8 bg-[#0B1220] overflow-hidden">
       {/* Background Ambient Orbs */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden z-0">
-        <div className="absolute -top-[20%] -left-[10%] w-[55vw] h-[55vw] rounded-full bg-gradient-to-br from-[#2F6FED]/20 to-[#4F46E5]/15 filter blur-[140px] animate-auroraSlow" />
-        <div className="absolute top-[40%] -right-[15%] w-[50vw] h-[50vw] rounded-full bg-gradient-to-bl from-[#0284C7]/20 to-[#2F6FED]/15 filter blur-[150px] animate-auroraReverse" />
-        <div className="absolute -bottom-[20%] left-[25%] w-[60vw] h-[60vw] rounded-full bg-gradient-to-tr from-[#6366F1]/15 to-[#3B82F6]/10 filter blur-[160px] animate-auroraSlow" />
+        <div className="absolute -top-[20%] -left-[10%] w-[55vw] h-[55vw] rounded-full bg-gradient-to-br from-[#2F6FED]/25 to-[#4F46E5]/20 filter blur-[140px] animate-auroraSlow" />
+        <div className="absolute top-[40%] -right-[15%] w-[50vw] h-[50vw] rounded-full bg-gradient-to-bl from-[#0284C7]/20 to-[#2F6FED]/20 filter blur-[150px] animate-auroraReverse" />
+        <div className="absolute -bottom-[20%] left-[25%] w-[60vw] h-[60vw] rounded-full bg-gradient-to-tr from-[#6366F1]/20 to-[#3B82F6]/15 filter blur-[160px] animate-auroraSlow" />
 
         {/* Subtle Fine Grid Texture */}
         <div

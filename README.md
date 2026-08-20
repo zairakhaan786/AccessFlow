@@ -23,6 +23,24 @@ Open [http://localhost:3000](http://localhost:3000) to view the portal.
 
 ---
 
+## 📸 Screenshots
+
+<details>
+<summary>View Application Screenshots</summary>
+
+### 1. Premium Glassmorphic Login
+![Login Screen](docs/screenshots/01-login.png)
+
+### 2. Registration Page
+![Signup Screen](docs/screenshots/02-signup.png)
+
+### 3. Main Dashboard & Access Directory
+![Dashboard](docs/screenshots/03-dashboard.png)
+
+</details>
+
+---
+
 ## 👥 Demo Accounts & Logins
 
 The database is pre-seeded with sample users, catalog boards, requests in various stages, audit logs, and notifications. You can use the 1-click switcher on the login page or enter credentials manually:
