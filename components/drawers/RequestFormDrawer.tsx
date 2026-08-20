@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import DrawerShell from "./DrawerShell";
 import { Users, Info, Check, CheckCircle2, AlertTriangle } from "lucide-react";
 import { AccessCatalogItem } from "../dashboard/SearchSection";
@@ -8,23 +8,25 @@ import { StatusBadge } from "@/components/ui/StatusBadge";
 import { submitRequestAction } from "@/app/actions/requests";
 import { showToast } from "@/components/ui/Toast";
 
-const EMPLOYEES = [
-  "Vanshika Sharma",
-  "Rohit Malhotra",
-  "Ananya Rao",
-  "Kabir Singh",
-  "Priya Menon",
-];
+interface AvailableUser {
+  id: string;
+  name: string;
+  email: string;
+  group?: string;
+  title?: string | null;
+}
 
 interface RequestFormDrawerProps {
   accessItem: AccessCatalogItem | null;
   currentUserName: string;
+  availableUsers?: AvailableUser[];
   onClose: () => void;
 }
 
 export default function RequestFormDrawer({
   accessItem,
   currentUserName,
+  availableUsers = [],
   onClose,
 }: RequestFormDrawerProps) {
   const [beneficiaryType, setBeneficiaryType] = useState<"self" | "other">("self");
@@ -34,6 +36,27 @@ export default function RequestFormDrawer({
 
   const [errorField, setErrorField] = useState<{ field: string; msg: string } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Dynamically compute employee beneficiary choices from real DB users, excluding logged-in user
+  const employeeList = useMemo(() => {
+    if (availableUsers && availableUsers.length > 0) {
+      const filtered = availableUsers
+        .filter((u) => u.name !== currentUserName)
+        .map((u) => ({
+          name: u.name,
+          group: u.group || "Team Member",
+          email: u.email,
+        }));
+      if (filtered.length > 0) return filtered;
+    }
+    return [
+      { name: "Vanshika Sharma", group: "Product Team", email: "vanshika@company.com" },
+      { name: "Rohit Malhotra", group: "Engineering Team", email: "rohit@company.com" },
+      { name: "Ananya Rao", group: "Support Team", email: "ananya@company.com" },
+      { name: "Kabir Singh", group: "Sales Team", email: "kabir@company.com" },
+      { name: "Priya Menon", group: "Marketing Team", email: "priya@company.com" },
+    ];
+  }, [availableUsers, currentUserName]);
 
   if (!accessItem) return null;
 
@@ -78,235 +101,230 @@ export default function RequestFormDrawer({
     }
   };
 
-  const handleDone = () => {
+  const handleReset = () => {
     setSubmittedId(null);
-    setJustification("");
-    setSelectedBeneficiary("");
     setBeneficiaryType("self");
+    setSelectedBeneficiary("");
+    setJustification("");
+    setErrorField(null);
     onClose();
   };
 
-  if (submittedId) {
-    return (
-      <DrawerShell isOpen={true} onClose={handleDone} title="Request submitted">
-        <div className="text-center py-4">
-          <div className="w-14 h-14 rounded-full bg-[#F0FDF4] text-[#22C55E] flex items-center justify-center mx-auto mb-4">
-            <CheckCircle2 className="w-8 h-8" />
-          </div>
-          <h3 className="text-[17px] font-extrabold text-[#111827]">
-            Access request submitted
-          </h3>
-          <p className="text-[13px] text-[#6B7280] mt-1">
-            We&apos;ll notify you as it moves through approval.
-          </p>
-
-          <div className="kv-list mt-6 text-left border border-[var(--border)] rounded-[10px] overflow-hidden">
-            <div className="kv-row flex items-center justify-between p-3 px-4 text-[13px] border-b border-[#F3F4F6]">
-              <span className="text-[var(--muted-2)]">Request ID</span>
-              <span className="font-semibold text-[#1F2937] font-mono">{submittedId}</span>
-            </div>
-            <div className="kv-row flex items-center justify-between p-3 px-4 text-[13px] border-b border-[#F3F4F6]">
-              <span className="text-[var(--muted-2)]">Status</span>
-              <StatusBadge status="Pending Approval" />
-            </div>
-            <div className="kv-row flex items-center justify-between p-3 px-4 text-[13px] border-b border-[#F3F4F6]">
-              <span className="text-[var(--muted-2)]">Approver</span>
-              <span className="font-semibold text-[#1F2937]">{accessItem.approverName}</span>
-            </div>
-            <div className="kv-row flex items-center justify-between p-3 px-4 text-[13px]">
-              <span className="text-[var(--muted-2)]">Requested access</span>
-              <span className="font-semibold text-[#1F2937]">
-                {accessItem.tool} – {accessItem.name}
-              </span>
-            </div>
-          </div>
-
-          <button onClick={handleDone} className="btn btn-primary btn-block w-full mt-6">
-            Done
-          </button>
-        </div>
-      </DrawerShell>
-    );
-  }
-
   return (
     <DrawerShell
-      isOpen={true}
-      onClose={onClose}
-      title="Request Access"
-      subtitle={`${accessItem.tool} – ${accessItem.name}`}
+      isOpen={!!accessItem}
+      onClose={handleReset}
+      title={accessItem.tool}
+      subtitle={accessItem.name}
+      badge={<StatusBadge status="Request" />}
     >
-      <div>
-        <span className="form-label text-[11.5px] font-bold uppercase tracking-wider text-[var(--muted-2)] mb-2 block">
-          Who is this for?
-        </span>
+      {submittedId ? (
+        <div className="py-6 text-center animate-fadeIn">
+          <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-4">
+            <CheckCircle2 className="w-6 h-6" />
+          </div>
+          <h3 className="text-lg font-bold text-[#111827]">
+            Access Request Submitted
+          </h3>
+          <p className="text-sm text-[var(--muted)] mt-1 max-w-sm mx-auto">
+            Your request <span className="font-mono font-bold text-[#111827]">{submittedId}</span> has been routed to{" "}
+            <strong>{accessItem.approverName}</strong> for review.
+          </p>
 
-        {/* Self Option */}
-        <button
-          type="button"
-          onClick={() => {
-            setBeneficiaryType("self");
-            setErrorField(null);
-          }}
-          className={`choice-card w-full text-left p-3.5 rounded-[10px] border-2 bg-white flex items-center gap-3 mb-2 transition ${
-            beneficiaryType === "self"
-              ? "border-[var(--accent)] bg-[#F5F8FF]"
-              : "border-[var(--border)] hover:border-gray-300"
-          }`}
-        >
-          <div className="w-8 h-8 rounded-full bg-[#2563EB] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">
-            {currentUserName
-              .split(" ")
-              .map((n) => n[0])
-              .slice(0, 2)
-              .join("")}
+          <div className="mt-6 pt-6 border-t border-[var(--border)] flex gap-3">
+            <button
+              onClick={handleReset}
+              className="btn btn-primary btn-block flex-1"
+            >
+              Done
+            </button>
           </div>
-          <div>
-            <div className="t text-[13.5px] font-bold text-[#111827]">
-              Myself — {currentUserName}
-            </div>
-            <div className="d text-[11.5px] text-[var(--muted-2)]">
-              Request access for your own account
-            </div>
-          </div>
-        </button>
+        </div>
+      ) : (
+        <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
+          {/* Who is this for */}
+          <div className="mb-6">
+            <span className="form-label text-[11.5px] font-bold uppercase tracking-wider text-[var(--muted-2)] mb-2.5 block">
+              Who is this request for?
+            </span>
 
-        {/* Other Option */}
-        <button
-          type="button"
-          onClick={() => {
-            setBeneficiaryType("other");
-            setErrorField(null);
-          }}
-          className={`choice-card w-full text-left p-3.5 rounded-[10px] border-2 bg-white flex items-center gap-3 mb-2 transition ${
-            beneficiaryType === "other"
-              ? "border-[var(--accent)] bg-[#F5F8FF]"
-              : "border-[var(--border)] hover:border-gray-300"
-          }`}
-        >
-          <div className="w-8 h-8 rounded-full bg-[#E5E7EB] text-[#6B7280] flex items-center justify-center flex-shrink-0">
-            <Users className="w-4 h-4" />
-          </div>
-          <div>
-            <div className="t text-[13.5px] font-bold text-[#111827]">Someone else</div>
-            <div className="d text-[11.5px] text-[var(--muted-2)]">
-              Raise this on behalf of another employee
-            </div>
-          </div>
-        </button>
-
-        {beneficiaryType === "other" && (
-          <div className="mt-2 animate-fadeIn">
-            <select
-              className={`text-input ${
-                errorField?.field === "beneficiary" ? "input-error" : ""
-              }`}
-              value={selectedBeneficiary}
-              onChange={(e) => {
-                setSelectedBeneficiary(e.target.value);
+            {/* Choice: Myself */}
+            <button
+              type="button"
+              onClick={() => {
+                setBeneficiaryType("self");
+                setSelectedBeneficiary("");
                 setErrorField(null);
               }}
+              className={`choice-card w-full text-left p-3.5 rounded-[10px] border-2 transition flex items-center gap-3 mb-2 ${
+                beneficiaryType === "self"
+                  ? "border-[var(--accent)] bg-[#F5F8FF] shadow-xs"
+                  : "border-[var(--border)] bg-white hover:bg-slate-50"
+              }`}
             >
-              <option value="">Select employee…</option>
-              {EMPLOYEES.map((e) => (
-                <option key={e} value={e}>
-                  {e}
-                </option>
-              ))}
-            </select>
-            {errorField?.field === "beneficiary" && (
+              <div
+                className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
+                  beneficiaryType === "self"
+                    ? "border-[var(--accent)] bg-[var(--accent)] text-white"
+                    : "border-gray-300 bg-white"
+                }`}
+              >
+                {beneficiaryType === "self" && <Check className="w-3 h-3 stroke-[3]" />}
+              </div>
+              <div>
+                <div className="t text-[13.5px] font-bold text-[#111827]">
+                  Myself ({currentUserName})
+                </div>
+                <div className="d text-[11.5px] text-[var(--muted-2)]">
+                  Access will be provisioned directly to your account
+                </div>
+              </div>
+            </button>
+
+            {/* Choice: Someone else */}
+            <button
+              type="button"
+              onClick={() => {
+                setBeneficiaryType("other");
+                setErrorField(null);
+              }}
+              className={`choice-card w-full text-left p-3.5 rounded-[10px] border-2 transition flex items-center gap-3 ${
+                beneficiaryType === "other"
+                  ? "border-[var(--accent)] bg-[#F5F8FF] shadow-xs"
+                  : "border-[var(--border)] bg-white hover:bg-slate-50"
+              }`}
+            >
+              <div
+                className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
+                  beneficiaryType === "other"
+                    ? "border-[var(--accent)] bg-[var(--accent)] text-white"
+                    : "border-gray-300 bg-white"
+                }`}
+              >
+                {beneficiaryType === "other" && <Check className="w-3 h-3 stroke-[3]" />}
+              </div>
+              <div>
+                <div className="t text-[13.5px] font-bold text-[#111827]">Someone else</div>
+                <div className="d text-[11.5px] text-[var(--muted-2)]">
+                  Raise this on behalf of another employee
+                </div>
+              </div>
+            </button>
+
+            {beneficiaryType === "other" && (
+              <div className="mt-3 animate-fadeIn">
+                <label className="form-label text-[11px] font-semibold text-[var(--muted-2)] mb-1 block">
+                  Select Employee (from database)
+                </label>
+                <select
+                  className={`text-input ${
+                    errorField?.field === "beneficiary" ? "input-error" : ""
+                  }`}
+                  value={selectedBeneficiary}
+                  onChange={(e) => {
+                    setSelectedBeneficiary(e.target.value);
+                    setErrorField(null);
+                  }}
+                >
+                  <option value="">Select employee…</option>
+                  {employeeList.map((emp) => (
+                    <option key={emp.name} value={emp.name}>
+                      {emp.name} — {emp.group} ({emp.email})
+                    </option>
+                  ))}
+                </select>
+                {errorField?.field === "beneficiary" && (
+                  <div className="field-error text-[11.5px] text-red-600 mt-1.5 flex items-center gap-1">
+                    <AlertTriangle className="w-3.5 h-3.5" />
+                    {errorField.msg}
+                  </div>
+                )}
+                <div className="note-box flex gap-2 text-[11.5px] text-[#6B7280] bg-[#F9FAFB] border border-gray-200/60 rounded-[9px] p-2.5 mt-2.5">
+                  <Info className="w-4 h-4 flex-shrink-0 mt-0.5 text-[var(--accent)]" />
+                  <span>
+                    You&apos;ll remain the requester of record and can close this request once
+                    access is provisioned, even if the beneficiary is unavailable.
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Access summary */}
+          <div className="mb-6">
+            <span className="form-label text-[11.5px] font-bold uppercase tracking-wider text-[var(--muted-2)] mb-2 block">
+              Access summary
+            </span>
+            <div className="kv-list border border-[var(--border)] rounded-[10px] overflow-hidden text-[13px] bg-white">
+              <div className="kv-row flex items-center justify-between p-2.5 px-3.5 border-b border-[#F3F4F6]">
+                <span className="text-[var(--muted-2)]">Request type</span>
+                <span className="font-semibold text-[#1F2937]">{accessItem.requestType}</span>
+              </div>
+              <div className="kv-row flex items-center justify-between p-2.5 px-3.5 border-b border-[#F3F4F6]">
+                <span className="text-[var(--muted-2)]">Access ID</span>
+                <span className="font-mono font-semibold text-[#1F2937]">
+                  {accessItem.accessId || "—"}
+                </span>
+              </div>
+              <div className="kv-row flex items-center justify-between p-2.5 px-3.5 border-b border-[#F3F4F6]">
+                <span className="text-[var(--muted-2)]">Routing approver</span>
+                <span className="font-semibold text-[#1F2937]">{accessItem.approverName}</span>
+              </div>
+              <div className="kv-row flex items-center justify-between p-2.5 px-3.5">
+                <span className="text-[var(--muted-2)]">Provisioning method</span>
+                <span className="font-semibold text-[#1F2937]">
+                  {accessItem.automation ? "Automated" : "Manual Queue"}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Justification */}
+          <div className="mb-6">
+            <label className="form-label text-[11.5px] font-bold uppercase tracking-wider text-[var(--muted-2)] mb-2 block">
+              Business Justification <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              rows={3}
+              className={`text-input ${
+                errorField?.field === "justification" ? "input-error" : ""
+              }`}
+              placeholder="Explain why you or the beneficiary require access to this board..."
+              value={justification}
+              onChange={(e) => {
+                setJustification(e.target.value);
+                setErrorField(null);
+              }}
+              disabled={isLoading}
+            />
+            {errorField?.field === "justification" && (
               <div className="field-error text-[11.5px] text-red-600 mt-1.5 flex items-center gap-1">
                 <AlertTriangle className="w-3.5 h-3.5" />
                 {errorField.msg}
               </div>
             )}
-            <div className="note-box flex gap-2 text-[11.5px] text-[#6B7280] bg-[#F9FAFB] border border-gray-200/60 rounded-[9px] p-2.5 mt-2.5">
-              <Info className="w-4 h-4 flex-shrink-0 mt-0.5" />
-              <span>
-                You&apos;ll remain the requester of record and can close this request once
-                access is provisioned, even if the beneficiary is unavailable.
-              </span>
-            </div>
           </div>
-        )}
-      </div>
 
-      <div className="mt-6">
-        <span className="form-label text-[11.5px] font-bold uppercase tracking-wider text-[var(--muted-2)] mb-2 block">
-          Access summary
-        </span>
-        <div className="kv-list border border-[var(--border)] rounded-[10px] overflow-hidden text-[13px]">
-          <div className="kv-row flex items-center justify-between p-2.5 px-3.5 border-b border-[#F3F4F6]">
-            <span className="text-[var(--muted-2)]">Request type</span>
-            <span className="font-semibold text-[#1F2937]">{accessItem.requestType}</span>
+          {/* Actions */}
+          <div className="pt-5 border-t border-[var(--border)] flex gap-3">
+            <button
+              type="button"
+              onClick={handleReset}
+              disabled={isLoading}
+              className="btn btn-secondary flex-1"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="btn btn-primary flex-1"
+            >
+              {isLoading ? "Submitting..." : "Submit Request"}
+            </button>
           </div>
-          <div className="kv-row flex items-center justify-between p-2.5 px-3.5 border-b border-[#F3F4F6]">
-            <span className="text-[var(--muted-2)]">Approver</span>
-            <span className="font-semibold text-[#1F2937]">{accessItem.approverName}</span>
-          </div>
-          <div className="kv-row flex items-center justify-between p-2.5 px-3.5 border-b border-[#F3F4F6]">
-            <span className="text-[var(--muted-2)]">Backup approver</span>
-            <span className="font-semibold text-[#1F2937]">
-              {accessItem.backupApproverName}
-            </span>
-          </div>
-          <div className="kv-row flex items-center justify-between p-2.5 px-3.5">
-            <span className="text-[var(--muted-2)]">Provisioning</span>
-            <span className="font-semibold text-[#1F2937]">
-              {accessItem.automation
-                ? "Automatic on approval"
-                : `Manual, by ${accessItem.providerName}`}
-            </span>
-          </div>
-        </div>
-        <p className="text-[11.5px] text-[#9CA3AF] mt-2">
-          Request type and approver are determined automatically.
-        </p>
-      </div>
-
-      <div className="mt-6">
-        <span className="form-label text-[11.5px] font-bold uppercase tracking-wider text-[var(--muted-2)] mb-2 block">
-          Business justification
-        </span>
-        <textarea
-          rows={4}
-          className={`text-input ${
-            errorField?.field === "justification" ? "input-error" : ""
-          }`}
-          placeholder="Briefly explain why this access is needed..."
-          value={justification}
-          onChange={(e) => {
-            setJustification(e.target.value);
-            setErrorField(null);
-          }}
-        />
-        {errorField?.field === "justification" && (
-          <div className="field-error text-[11.5px] text-red-600 mt-1.5 flex items-center gap-1">
-            <AlertTriangle className="w-3.5 h-3.5" />
-            {errorField.msg}
-          </div>
-        )}
-      </div>
-
-      <div className="btn-row flex items-center gap-2.5 mt-6">
-        <button
-          type="button"
-          onClick={onClose}
-          disabled={isLoading}
-          className="btn btn-secondary flex-1"
-        >
-          Cancel
-        </button>
-        <button
-          type="button"
-          onClick={handleSubmit}
-          disabled={isLoading}
-          className="btn btn-primary flex-1 flex items-center justify-center gap-2"
-        >
-          <Check className="w-4 h-4 stroke-[2.5]" />
-          {isLoading ? "Submitting..." : "Submit Request"}
-        </button>
-      </div>
+        </form>
+      )}
     </DrawerShell>
   );
 }

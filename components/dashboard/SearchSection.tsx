@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { Search as SearchIcon } from "lucide-react";
+import React, { useState, useMemo } from "react";
+import { Search as SearchIcon, Filter, Layers, LayoutGrid, AppWindow } from "lucide-react";
 import { CategoryBadge, EligibilityBadge } from "@/components/ui/StatusBadge";
 
 export interface AccessCatalogItem {
@@ -33,7 +33,14 @@ export default function SearchSection({
   onOpenAccessDetails,
 }: SearchSectionProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [browsing, setBrowsing] = useState(false);
+
+  // Extract all unique categories present in the catalog
+  const categories = useMemo(() => {
+    const unique = Array.from(new Set(catalog.map((item) => item.category)));
+    return ["All", ...unique];
+  }, [catalog]);
 
   const isEligible = (item: AccessCatalogItem) => {
     try {
@@ -44,16 +51,23 @@ export default function SearchSection({
     }
   };
 
-  const active = searchQuery.trim().length > 0 || browsing;
+  const isFilterActive = searchQuery.trim().length > 0 || browsing || selectedCategory !== "All";
 
   const results = catalog.filter((a) => {
+    // Category filter
+    if (selectedCategory !== "All" && a.category !== selectedCategory) {
+      return false;
+    }
+    // Text search query filter
     if (!searchQuery.trim()) return true;
     const q = searchQuery.toLowerCase();
     return (
       a.tool.toLowerCase().includes(q) ||
       a.name.toLowerCase().includes(q) ||
       a.group.toLowerCase().includes(q) ||
-      a.category.toLowerCase().includes(q)
+      a.category.toLowerCase().includes(q) ||
+      (a.accessId && a.accessId.toLowerCase().includes(q)) ||
+      a.approverName.toLowerCase().includes(q)
     );
   });
 
@@ -87,15 +101,65 @@ export default function SearchSection({
           onClick={() => setBrowsing(!browsing)}
           className="browse-btn h-[var(--ctrl-h)] px-4 rounded-[var(--radius-control)] border border-[var(--border)] bg-white text-[#374151] text-[13px] font-semibold inline-flex items-center justify-center gap-1.5 whitespace-nowrap transition hover:bg-[#F9FAFB] hover:border-[#CBD5E1]"
         >
-          {browsing && !searchQuery ? "Hide directory" : "Browse directory"}
+          {browsing && !searchQuery && selectedCategory === "All" ? "Hide directory" : "Browse directory"}
         </button>
       </div>
 
-      {active && (
+      {/* Category Filter Pills (Part of spec) */}
+      <div className="category-pills flex items-center gap-2 mt-3.5 flex-wrap">
+        <span className="text-[11.5px] font-bold text-[var(--muted-2)] uppercase tracking-wider mr-1 flex items-center gap-1">
+          <Filter className="w-3 h-3" /> Filter:
+        </span>
+        {categories.map((cat) => {
+          const isSelected = selectedCategory === cat;
+          return (
+            <button
+              key={cat}
+              type="button"
+              onClick={() => setSelectedCategory(cat)}
+              className={`px-3 py-1 rounded-full text-[12px] font-semibold transition flex items-center gap-1.5 ${
+                isSelected
+                  ? "bg-[var(--navy)] text-white shadow-xs"
+                  : "bg-white text-[#4B5563] border border-[var(--border)] hover:bg-[#F9FAFB] hover:border-[#CBD5E1]"
+              }`}
+            >
+              {cat === "All" && <Layers className="w-3 h-3" />}
+              {cat === "Board" && <LayoutGrid className="w-3 h-3" />}
+              {cat === "Application" && <AppWindow className="w-3 h-3" />}
+              <span>{cat}</span>
+              <span
+                className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
+                  isSelected ? "bg-white/20 text-white" : "bg-gray-100 text-gray-500"
+                }`}
+              >
+                {cat === "All"
+                  ? catalog.length
+                  : catalog.filter((c) => c.category === cat).length}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      {isFilterActive && (
         <div className="mt-4 flex flex-col gap-2.5 animate-fadeIn">
-          <div className="text-[12px] text-[#9CA3AF]">
-            {results.length} result{results.length !== 1 ? "s" : ""}{" "}
-            {searchQuery ? `for "${searchQuery}"` : "in the directory"}
+          <div className="text-[12px] text-[#9CA3AF] flex items-center justify-between">
+            <span>
+              {results.length} result{results.length !== 1 ? "s" : ""}{" "}
+              {searchQuery ? `for "${searchQuery}"` : "in directory"}{" "}
+              {selectedCategory !== "All" ? `· Category: ${selectedCategory}` : ""}
+            </span>
+            {(searchQuery || selectedCategory !== "All") && (
+              <button
+                onClick={() => {
+                  setSearchQuery("");
+                  setSelectedCategory("All");
+                }}
+                className="text-[11.5px] text-[var(--accent)] font-semibold hover:underline"
+              >
+                Reset filters
+              </button>
+            )}
           </div>
 
           {results.length === 0 ? (
@@ -107,7 +171,7 @@ export default function SearchSection({
                 No matching access found
               </div>
               <div className="sub text-[12px] text-[#9CA3AF] mt-1 max-w-[340px] mx-auto">
-                Try a different keyword.
+                Try selecting a different category or adjusting your search keywords.
               </div>
             </div>
           ) : (

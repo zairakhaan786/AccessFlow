@@ -223,6 +223,7 @@ export default function MainDashboard({
         <RequestFormDrawer
           accessItem={selectedAccessItem}
           currentUserName={currentUser.name}
+          availableUsers={allDemoUsers}
           onClose={() => setActiveDrawer(null)}
         />
       )}
