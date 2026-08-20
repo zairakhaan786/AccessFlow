@@ -6,6 +6,9 @@ if (process.env.VERCEL) {
 
 const nextConfig = {
   reactStrictMode: true,
+  env: {
+    NEXTAUTH_URL: process.env.NEXTAUTH_URL || `https://${process.env.VERCEL_URL || 'accessflow-demo.vercel.app'}`,
+  },
   eslint: {
     ignoreDuringBuilds: true,
   },
