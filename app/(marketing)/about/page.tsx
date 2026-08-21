@@ -25,19 +25,13 @@ export default function AboutPage() {
         {/* Video Walkthrough Player */}
         <Reveal>
         <div className="w-full aspect-video rounded-2xl overflow-hidden bg-[#0D1526] border border-white/10 shadow-2xl mb-12 relative group">
-          <video
-            controls
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="w-full h-full object-cover"
-            poster="/screenshots/04-dashboard.png"
-          >
-            <source src="/videos/walkthrough.mp4" type="video/mp4" />
-            <source src="/videos/walkthrough.webm" type="video/webm" />
-            Your browser does not support the video tag.
-          </video>
+          <iframe
+            src="https://www.loom.com/embed/29c58419235641c2960d123bccff30e0?hide_owner=true&hide_share=true&hide_title=true&hideEmbedTopBar=true"
+            title="AccessFlow Full Stack Demo and Walkthrough"
+            className="w-full h-full border-0 absolute inset-0"
+            allowFullScreen
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          />
         </div>
         </Reveal>
 
@@ -105,7 +99,14 @@ export default function AboutPage() {
                 <span className="text-[var(--accent)] mr-2 mt-0.5">✓</span>
                 <div>
                   <strong>Loom Walkthrough</strong><br />
-                  <span className="text-sm text-[var(--muted)]">Screen recording shared with the assessment team.</span>
+                  <a 
+                    href="https://www.loom.com/share/29c58419235641c2960d123bccff30e0" 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="text-sm text-[var(--accent)] hover:underline font-medium inline-flex items-center gap-1"
+                  >
+                    Watch Video on Loom ↗
+                  </a>
                 </div>
               </li>
             </ul>

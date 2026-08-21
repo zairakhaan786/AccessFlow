@@ -4,6 +4,8 @@ AccessFlow is a production-ready, full-stack enterprise access governance portal
 
 The application converts a high-fidelity access management interface into a robust, server-enforced governance system featuring role-based access control, atomic multi-step provisioning lifecycles, real-time audit logging, exception workflows, and persistent cloud database storage.
 
+🎥 **Video Walkthrough**: [Watch Full Technical Assessment & Architecture Walkthrough on Loom](https://www.loom.com/share/29c58419235641c2960d123bccff30e0)
+
 ---
 
 ## 🚀 Quick Start (Local Setup)
