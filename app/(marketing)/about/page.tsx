@@ -22,21 +22,24 @@ export default function AboutPage() {
       </div>
 
       <div className="w-full max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8 -mt-8 relative z-20">
-        {/* Video Walkthrough Placeholder */}
+        {/* Video Walkthrough Player */}
         <Reveal>
-        <div className="w-full aspect-video rounded-2xl overflow-hidden bg-[#0D1526] border border-white/10 shadow-xl mb-12 relative">
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-gradient-to-br from-[#0F1B33] to-[#0A0F1C] text-white">
-          <svg className="w-16 h-16 mb-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <h3 className="text-lg font-bold mb-2">Walkthrough Video</h3>
-          <p className="text-sm text-slate-400 max-w-md">
-            A walkthrough is shared with the assessment team.
-          </p>
+        <div className="w-full aspect-video rounded-2xl overflow-hidden bg-[#0D1526] border border-white/10 shadow-2xl mb-12 relative group">
+          <video
+            controls
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-full object-cover"
+            poster="/screenshots/04-dashboard.png"
+          >
+            <source src="/videos/walkthrough.mp4" type="video/mp4" />
+            <source src="/videos/walkthrough.webm" type="video/webm" />
+            Your browser does not support the video tag.
+          </video>
         </div>
-      </div>
-      </Reveal>
+        </Reveal>
 
       {/* Narrative & Assessment Info */}
       <Reveal delay={0.1}>
