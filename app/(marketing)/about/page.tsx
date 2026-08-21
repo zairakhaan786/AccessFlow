@@ -109,20 +109,24 @@ export default function AboutPage() {
           </div>
 
           <div>
-            <h3 className="text-[16px] font-bold text-[#E5EAF3] mb-3">What I Built</h3>
-            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-sm text-[var(--text)]">
-              <li className="flex items-center"><span className="text-[var(--accent)] mr-2">✓</span> Authentication</li>
-              <li className="flex items-center"><span className="text-[var(--accent)] mr-2">✓</span> Access Directory</li>
-              <li className="flex items-center"><span className="text-[var(--accent)] mr-2">✓</span> Access Requests</li>
-              <li className="flex items-center"><span className="text-[var(--accent)] mr-2">✓</span> Request on behalf</li>
-              <li className="flex items-center"><span className="text-[var(--accent)] mr-2">✓</span> Approval workflow</li>
-              <li className="flex items-center"><span className="text-[var(--accent)] mr-2">✓</span> Automated provisioning</li>
-              <li className="flex items-center"><span className="text-[var(--accent)] mr-2">✓</span> Manual provisioning</li>
-              <li className="flex items-center"><span className="text-[var(--accent)] mr-2">✓</span> Request tracking</li>
-              <li className="flex items-center"><span className="text-[var(--accent)] mr-2">✓</span> Persistent database</li>
-              <li className="flex items-center"><span className="text-[var(--accent)] mr-2">✓</span> Role-based access</li>
-              <li className="flex items-center"><span className="text-[var(--accent)] mr-2">✓</span> Responsive UI/UX</li>
-              <li className="flex items-center"><span className="text-[var(--accent)] mr-2">✓</span> Part 4 improvements</li>
+            <h3 className="text-[16px] font-bold text-[#E5EAF3] mb-3">What I Built &amp; Implemented</h3>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2.5 text-sm text-[var(--text)]">
+              <li className="flex items-center"><span className="text-[var(--accent)] mr-2 font-bold">✓</span> NextAuth Authentication</li>
+              <li className="flex items-center"><span className="text-[var(--accent)] mr-2 font-bold">✓</span> Forgot Password &amp; Reset Flow</li>
+              <li className="flex items-center"><span className="text-[var(--accent)] mr-2 font-bold">✓</span> Access Directory &amp; Search</li>
+              <li className="flex items-center"><span className="text-[var(--accent)] mr-2 font-bold">✓</span> Self &amp; On-Behalf Requests</li>
+              <li className="flex items-center"><span className="text-[var(--accent)] mr-2 font-bold">✓</span> Out-of-Group Exception Flow</li>
+              <li className="flex items-center"><span className="text-[var(--accent)] mr-2 font-bold">✓</span> Approval &amp; Rejection Logic</li>
+              <li className="flex items-center"><span className="text-[var(--accent)] mr-2 font-bold">✓</span> Automated Provisioning Engine</li>
+              <li className="flex items-center"><span className="text-[var(--accent)] mr-2 font-bold">✓</span> Manual Provisioning Queue</li>
+              <li className="flex items-center"><span className="text-[var(--accent)] mr-2 font-bold">✓</span> Recent Activity &amp; Audit Logs</li>
+              <li className="flex items-center"><span className="text-[var(--accent)] mr-2 font-bold">✓</span> 7d / 21d / 30d History Filters</li>
+              <li className="flex items-center"><span className="text-[var(--accent)] mr-2 font-bold">✓</span> Request Timeline Tracking</li>
+              <li className="flex items-center"><span className="text-[var(--accent)] mr-2 font-bold">✓</span> Neon PostgreSQL Database</li>
+              <li className="flex items-center"><span className="text-[var(--accent)] mr-2 font-bold">✓</span> Employee vs Admin Roles</li>
+              <li className="flex items-center"><span className="text-[var(--accent)] mr-2 font-bold">✓</span> Inline Quick-Approvals</li>
+              <li className="flex items-center"><span className="text-[var(--accent)] mr-2 font-bold">✓</span> Concurrency Transaction Lock</li>
+              <li className="flex items-center"><span className="text-[var(--accent)] mr-2 font-bold">✓</span> Responsive Glassmorphic UI</li>
             </ul>
           </div>
         </div>

@@ -34,5 +34,5 @@ export default function middleware(req: any, event: any) {
 }
 
 export const config = {
-  matcher: ["/((?!api/auth|_next/static|_next/image|favicon.ico|login|signup|forgot-password|reset-password|about|projects|$).*)"],
+  matcher: ["/((?!api/auth|_next/static|_next/image|favicon.ico|screenshots|login|signup|forgot-password|reset-password|about|projects|.*\\.(?:png|jpg|jpeg|gif|svg|webp)$|$).*)"],
 };

@@ -26,7 +26,7 @@ export default function ProjectsPage() {
           <div className="w-full md:w-2/5 bg-white/[0.03] border-b md:border-b-0 md:border-r border-white/10 p-6 flex flex-col gap-4">
             <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-white/10 shadow-sm">
               <Image 
-                src="/screenshots/03-dashboard.png" 
+                src="/screenshots/04-dashboard.png" 
                 alt="AccessFlow Dashboard" 
                 fill 
                 className="object-cover object-left-top"
@@ -35,7 +35,7 @@ export default function ProjectsPage() {
             <div className="grid grid-cols-2 gap-4">
               <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden border border-white/10 shadow-sm">
                 <Image 
-                  src="/screenshots/01-login.png" 
+                  src="/screenshots/02-login.png" 
                   alt="AccessFlow Login" 
                   fill 
                   className="object-cover object-top"
@@ -43,7 +43,7 @@ export default function ProjectsPage() {
               </div>
               <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden border border-white/10 shadow-sm bg-[#0F1B33]">
                 <Image 
-                  src="/screenshots/02-signup.png" 
+                  src="/screenshots/03-signup.png" 
                   alt="AccessFlow Signup" 
                   fill 
                   className="object-cover object-top"

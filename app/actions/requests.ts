@@ -2,6 +2,8 @@
 
 import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
+import { encode } from "next-auth/jwt";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import {
@@ -201,6 +203,57 @@ export async function deleteAuditLogAction(formData: { logId: string }) {
   await getAuthenticatedUser();
   await prisma.auditLog.delete({
     where: { id: formData.logId },
+  });
+
+  revalidatePath("/");
+  return { success: true };
+}
+
+export async function switchDemoUserAction(email: string) {
+  await getAuthenticatedUser();
+
+  const target = await prisma.user.findUnique({
+    where: { email: email.toLowerCase().trim() },
+  });
+
+  if (!target) {
+    return { success: false, error: "Demo account not found. Run `npm run seed` against the database first." };
+  }
+
+  const secret =
+    process.env.NEXTAUTH_SECRET || "accessflow-super-secret-key-32-chars-long-min-prod";
+
+  const cookieStore = cookies();
+  const existing = cookieStore
+    .getAll()
+    .find(
+      (c) =>
+        c.name === "__Secure-next-auth.session-token" ||
+        c.name === "next-auth.session-token"
+    );
+  const cookieName = existing?.name || "next-auth.session-token";
+
+  const token = await encode({
+    token: {
+      id: target.id,
+      name: target.name,
+      email: target.email,
+      role: target.role,
+      group: target.group,
+      title: target.title,
+      initials: target.initials,
+      tone: target.tone,
+    },
+    secret: secret as any,
+    maxAge: 30 * 24 * 60 * 60,
+  });
+
+  cookieStore.set(cookieName, token, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: cookieName.startsWith("__Secure-"),
+    path: "/",
+    maxAge: 30 * 24 * 60 * 60,
   });
 
   revalidatePath("/");

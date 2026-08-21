@@ -2,9 +2,9 @@
 import { formatClientDate } from "@/lib/utils";
 
 import React, { useState, useRef, useEffect } from "react";
-import { signOut, signIn } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { Bell, MessageSquare, LogOut, ChevronDown, Check, UserCheck } from "lucide-react";
-import { markNotificationsAsReadAction } from "@/app/actions/requests";
+import { markNotificationsAsReadAction, switchDemoUserAction } from "@/app/actions/requests";
 
 interface UserInfo {
   id: string;
@@ -58,18 +58,12 @@ export default function Header({
 
   const handleSwitchUser = async (email: string) => {
     setUserMenuOpen(false);
-    const password = email.startsWith("rahul")
-      ? "admin123"
-      : email.startsWith("manvi") || email.startsWith("ananya")
-      ? "emp123"
-      : "password123";
-
-    await signIn("credentials", {
-      redirect: true,
-      callbackUrl: "/dashboard",
-      email,
-      password,
-    });
+    const res = await switchDemoUserAction(email);
+    if (res?.success) {
+      window.location.href = "/dashboard";
+    } else {
+      alert(res?.error || "Failed to switch account. Please try again.");
+    }
   };
 
   // Click outside listener
@@ -87,6 +81,9 @@ export default function Header({
   }, []);
 
   const showDemoSwitcher = true;
+
+  const demoEmployee = allDemoUsers.find((u) => u.role === "EMPLOYEE");
+  const demoAdmin = allDemoUsers.find((u) => u.role === "BOARD_ADMIN");
 
   return (
     <header className="sticky top-0 z-30 bg-[#0B1220]/80 backdrop-blur-xl border-b border-white/[0.08]">
@@ -112,8 +109,14 @@ export default function Header({
           {showDemoSwitcher ? (
             <div className="flex items-center border border-white/12 bg-white/[0.06] rounded-[9px] p-[3px] backdrop-blur-md">
               <button
-                onClick={() => handleSwitchUser("manvi@company.com")}
-                className={`px-3.5 py-1.5 rounded-[6px] text-[12.5px] font-semibold transition ${
+                onClick={() => demoEmployee && handleSwitchUser(demoEmployee.email)}
+                disabled={!demoEmployee}
+                title={
+                  demoEmployee
+                    ? `Switch to employee view (${demoEmployee.name})`
+                    : "No employee accounts available"
+                }
+                className={`px-3.5 py-1.5 rounded-[6px] text-[12.5px] font-semibold transition disabled:opacity-40 disabled:cursor-not-allowed ${
                   currentUser.role !== "BOARD_ADMIN"
                     ? "bg-gradient-to-r from-[#2F6FED] to-[#1E4FC7] text-white shadow-[0_0_14px_rgba(47,111,237,0.4)]"
                     : "text-[#94A3B8] hover:bg-white/10 hover:text-white"
@@ -122,8 +125,14 @@ export default function Header({
                 Employee View
               </button>
               <button
-                onClick={() => handleSwitchUser("rahul@company.com")}
-                className={`px-3.5 py-1.5 rounded-[6px] text-[12.5px] font-semibold transition ${
+                onClick={() => demoAdmin && handleSwitchUser(demoAdmin.email)}
+                disabled={!demoAdmin}
+                title={
+                  demoAdmin
+                    ? `Switch to board admin view (${demoAdmin.name})`
+                    : "No admin accounts available"
+                }
+                className={`px-3.5 py-1.5 rounded-[6px] text-[12.5px] font-semibold transition disabled:opacity-40 disabled:cursor-not-allowed ${
                   currentUser.role === "BOARD_ADMIN"
                     ? "bg-gradient-to-r from-[#2F6FED] to-[#1E4FC7] text-white shadow-[0_0_14px_rgba(47,111,237,0.4)]"
                     : "text-[#94A3B8] hover:bg-white/10 hover:text-white"
